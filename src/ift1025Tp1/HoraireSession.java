@@ -63,5 +63,12 @@ public class HoraireSession {
 		this.horaireSemaine.add(horaireSemaine);
 	}
 
+	@Override
+	public String toString() {
+		return "HoraireSession [dateDebut=" + dateDebut + ", dateFin=" + dateFin + ", horaireSemaine=" + horaireSemaine
+				+ "]";
+	}
+
+	
 
 }

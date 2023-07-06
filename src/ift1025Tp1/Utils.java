@@ -121,8 +121,6 @@ public class Utils {
 	}
 
 	public static void creerNvCours(TreeMap<String, Cours> repertoireCours, Scanner scanner) {
-		
-
 		System.out.print("Entrez le sigle du cours : ");
 		String sigleNvCours = scanner.nextLine();
 
@@ -141,16 +139,16 @@ public class Utils {
 		//		private String sigle;
 		//		int nbCredits;
 
-		HoraireSession horaireSessionTH = inputHoraireSession("Veuillez saisir pour le cours THEORIQUE (TH) :", scanner);
+		HoraireSession horaireSessionTH = inputHoraireSession("Veuillez saisir pour le cours THEORIQUE (TH) :", scanner, false);
 		nvCours.setHoraireTH(horaireSessionTH);
 
-		HoraireSession horaireSessionTP = inputHoraireSession("Veuillez saisir pour le cours PRATIQUE (TP) :", scanner);
+		HoraireSession horaireSessionTP = inputHoraireSession("Veuillez saisir pour le cours PRATIQUE (TP) :", scanner, false);
 		nvCours.setHoraireTP(horaireSessionTP);
 		
-		HoraireSession horaireSessionExamI = inputHoraireSession("pour l'examen INTRA : ", scanner); 
+		HoraireSession horaireSessionExamI = inputHoraireSession("pour l'examen INTRA : ", scanner, true); 
 		nvCours.setExamI(horaireSessionExamI);
 		
-		HoraireSession horaireSessionExamF = inputHoraireSession("pour l'examen FINAL : ", scanner);
+		HoraireSession horaireSessionExamF = inputHoraireSession("pour l'examen FINAL : ", scanner, true);
 		nvCours.setExamF(horaireSessionExamF);
 
 		// Ajouter le cours à la liste (repertoire)
@@ -158,35 +156,60 @@ public class Utils {
 		ajouterCours(nvCours, repertoireCours);  
 
 		System.out.println("Le cours a été créé avec succès.");
-
 	}
 
-	public static HoraireSession inputHoraireSession(String typeDeCours, Scanner scanner) {
+	public static HoraireSession inputHoraireSession(String typeDeCours, Scanner scanner, boolean estExam) {
 		boolean continuer = true;
 		HoraireSession horaireSession = new HoraireSession();
+		
+		String msg = estExam ? typeDeCours + " date de l'examen (format requis: aaaa-mm-jj) : " : typeDeCours + " la date de DEBUT (format requis: aaaa-mm-jj) : "; 
+		
 		while(continuer) {
+			// tout d'abord, pour la date de DEBUT
 			try {
 				// prendre les Strings pour instancier 
-				System.out.println(typeDeCours + " la date de DEBUT");
-				System.out.println("(format requis: aaaa-mm-jj) : ");
+				System.out.println(msg);
 				String dateDebut = scanner.nextLine(); // eg. 2023-01-01
-				System.out.println(typeDeCours + " la date de FIN");
-				String dateFin = scanner.nextLine(); // eg. 2023-05-01
 
-				// set parametres
+				// set attribut
 				horaireSession.setDateDebut(dateDebut); 
-				horaireSession.setDateFin(dateFin);
 				
-				continuer = false; // => c'est bon. sortir boucle
+				if (estExam) {
+					horaireSession.setDateFin(dateDebut); // c'est exam, meme datefin que datedebut 
+					continuer = false; // => vu que c'est qu'un examen (date simple), on va sortir de la boucle
+				}
+				
 			} catch (DateTimeParseException e) {
-				System.out.println("bad format, reessayer");
+				System.out.println("mauvais format, reessayer");
 				scanner.nextLine(); // vider bad input
 				// boucle continue 
 			}
+			
+			// ensuite pour la date de FIN mais seulement si ce n'est pas un examen 
+			if (!estExam) {
+				try {
+				// prendre les Strings pour instancier 
+				System.out.println(typeDeCours + " la date de FIN");
+				String dateFin = scanner.nextLine(); // eg. 2023-05-01
+
+				// set attribut 
+				horaireSession.setDateFin(dateFin);
+				
+				continuer = false; // => c'est bon. sortir boucle
+				} catch (DateTimeParseException e) {
+					System.out.println("mauvais format, reessayer");
+					scanner.nextLine(); // vider bad input
+					// boucle continue 
+				} 
+				
+				// déclarer aussi emploi du temps par semaine, uniquement si ce n'est pas un examen
+				HashSet<HoraireSemaine> horaireSemaine = inputHoraireSemaine(scanner); // les lundis de 08:00 - 10:00
+				horaireSession.setHoraireSemaine(horaireSemaine);
+				// TODO adapter ca pour examen 
+			} 
 		}
 
-		HashSet<HoraireSemaine> horaireSemaine = inputHoraireSemaine(scanner); // les lundis de 08:00 - 10:00
-		horaireSession.setHoraireSemaine(horaireSemaine);
+		
 		
 		return horaireSession;
 	}
@@ -232,8 +255,6 @@ public class Utils {
 	}
 
 	public static HoraireHeure inputHoraireHeure(String msgAAfficher, Scanner scanner) {
-
-
 		// prendre les Strings pour instancier 
 		System.out.println("Veuillez saisir pour " + msgAAfficher + " l'heure de DEBUT. ");
 		System.out.println("Format requis hh:mm par exemple 08:30 (non pas 8:30)");
@@ -244,11 +265,6 @@ public class Utils {
 
 		// instancier
 		HoraireHeure horaireHeure = new HoraireHeure(heureDebut, heureFin);
-
-		//		System.out.println("horaire a été créé : ");
-		//		System.out.println(horaireHeure);
-
-
 		return horaireHeure;
 	}
 
