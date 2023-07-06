@@ -1,5 +1,4 @@
 package ift1025Tp1;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -10,14 +9,15 @@ public class Utils {
 		repertoireCours.put(cours.getSigle(), cours);        
 	}
 
-
-	public static void menuModifierCours(Cours coursAncien, Cours coursNouveau, TreeMap<String, Cours> repertoireCours) {
+	public static void menuModifierCours(TreeMap<String, Cours> repertoireCours) {
+		System.out.println("Voici tous les cours du repertoire : ");
 		System.out.println(repertoireCours);
 
 		Scanner scanner = new Scanner(System.in);
-
-		System.out.println("Saisir le sigle du cours que vous souhaitez modifier (eg. \"IFT1025\"): ");
-		System.out.println("ou faites le 0 pour quitter");
+		
+		String optionsMenuAAfficher = "Saisir le sigle du cours que vous souhaitez modifier (eg. \"IFT1025\")."
+				+ " \nou faites le 0 pour quitter: ";
+		System.out.println(optionsMenuAAfficher);
 
 		boolean continuer = true;
 		while (continuer) {
@@ -28,38 +28,40 @@ public class Utils {
 				sigleSaisi = "ok";
 			}
 
-
 			switch (sigleSaisi) {
 			case "ok":
-				
-				modifierCours(coursAModifier); // lancer les menus
-				
+				modifierCours(coursAModifier, repertoireCours); // lancer les menus
+				// de retour dans menu 
+				System.out.println(optionsMenuAAfficher);
 				break;
-			case "0":
-				// Quitter
-				System.out.println("Option 0 : Quitter");
+			case "0": // Quitter
 				continuer = false;
 				break;
 			default:
-				System.out.println("Option invalide. Veuillez choisir une option valide.");
+				System.out.println("Option invalide ou sigle n'existe pas. Veuillez choisir une option valide.");
 				break;
 			}
 		}
 	}
 	
-	public static void modifierCours(Cours coursAModifier) {
+	// une fois un certain Cours est choisi, proposer un menu d'options de modifications
+	public static void modifierCours(Cours coursAModifier, TreeMap<String, Cours> repertoireCours) {
 		System.out.println("vous avez sélectionné le cours suivant :");
-		System.out.println(coursAModifier); 
-		/* eg. "Cours [1. horaireTH=" + horaireTH + ", 
+		String menuAAfficher = coursAModifier + "7. supprimer ce cours du repertoire" + 
+				"\nVeuillez choisir le numero correspondant au parametre que vous souhaitez modifier" + 
+				"\n(ou faites le 0 pour quitter ce menu et retourner en arriere) : ";  
+		
+		// coursAModifier : 
+		/* eg. "Cours 
+		1. horaireTH=" + horaireTH + ", 
 		2. horaireTP=" + horaireTP + ", 
 		3. examI=" + examI + ", 
 		4.examF=" + examF
 		+ ", 
 		5.sigle=" + sigle + ", 
-		6.nbCredits=" + nbCredits + "]"; */
+		6.nbCredits=" + nbCredits */
 		
-		System.out.println("Veuillez choisir le numero correspondant au parametre que vous souhaitez modifier");
-		System.out.println("(ou faites le 0 pour quitter) : ");
+		System.out.println(menuAAfficher);
 		Scanner scanner = new Scanner(System.in);
 		
 		boolean continuer = true;
@@ -73,32 +75,37 @@ public class Utils {
 				System.out.println("Option 0 : Quitter");
 				continuer = false;
 				break;
-			case "1":
+			case "1": //horaireTH
 				// ... 
 				break;
-			case "2":
+			case "2": //horaireTP
 				// ... 
 				break;
-			case "3":
+			case "3": //exam I
 				// ... 
 				break;
-			case "4":
+			case "4": //exam F
 				// ... 
 				break;
-			case "5":
+			case "5": //sigle
 				// ... 
 				break;
-			case "6":
+			case "6": //nbcredits
 				// ... 
+				break;
+			case "7": //supprimer
+				supprimerCours(coursAModifier.getSigle(), repertoireCours);
+				
+				// de retour dans menu
+				System.out.println("de retour dans menu modification de cours : ");
+				System.out.println(menuAAfficher);
 				break;
 				
 			default:
 				System.out.println("Option invalide. Veuillez choisir une option valide.");
 				break;
 			}
-			
 		}
-		
 	}
 
 	public static void supprimerCours(String sigleCours, TreeMap<String, Cours> repertoireCours) {
@@ -116,7 +123,7 @@ public class Utils {
 		System.out.print("Entrez le sigle du cours : ");
 		String sigleNvCours = scanner.nextLine();
 
-		System.out.print("Entrez le nombre de credits du cours : ");
+		System.out.print("Entrez le nombre de credits du cours (eg. 3) : ");
 		int nbCredits = scanner.nextInt();
 
 		Cours nvCours = new Cours(sigleNvCours, nbCredits);
@@ -125,6 +132,9 @@ public class Utils {
 		// ... 
 		// TODO
 		// ...
+		
+//		String dateDebut =; 
+//		String dateFin =;
 
 		// Ajouter le cours à la liste
 		repertoireCours.put(sigleNvCours, nvCours);

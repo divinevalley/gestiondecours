@@ -1,6 +1,7 @@
 package ift1025Tp1;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /*
  * 
@@ -13,33 +14,39 @@ attributs : heureDébut, heureFin
 public class HoraireHeure {
 
 // attributs: 
-	private LocalDateTime heureDebut;
-	private LocalDateTime heureFin;
+	private LocalTime heureDebut;
+	private LocalTime heureFin;
 	
 	
-	public HoraireHeure(LocalDateTime heureDebut, LocalDateTime heureFin) {
-		this.heureDebut = heureDebut;
-		this.heureFin = heureFin;
+	public HoraireHeure(String heureDebutString, String heureFinString) {
+		
+		
+		this.heureDebut = parseHeure(heureDebutString);
+		this.heureFin = parseHeure(heureFinString);
+	}
+	
+	public LocalTime parseHeure(String heureAParser) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return LocalTime.parse(heureAParser, formatter);
 	}
 
-
-	public LocalDateTime getHeureDebut() {
+	public LocalTime getHeureDebut() {
 		return heureDebut;
 	}
 
 
-	public void setHeureDebut(LocalDateTime heureDebut) {
-		this.heureDebut = heureDebut;
+	public void setHeureDebut(String heureDebut) {
+		this.heureDebut = parseHeure(heureDebut);
 	}
 
 
-	public LocalDateTime getHeureFin() {
+	public LocalTime getHeureFin() {
 		return heureFin;
 	}
 
 
-	public void setHeureFin(LocalDateTime heureFin) {
-		this.heureFin = heureFin;
+	public void setHeureFin(String heureFin) {
+		this.heureFin = parseHeure(heureFin);
 	}
 
 }

@@ -61,6 +61,28 @@ public class Cours {
 	public HoraireSession getExamF() {
 		return examF;
 	}
+	
+	
+
+	public void setHoraireTH(HoraireSession horaireTH) {
+		this.horaireTH = horaireTH;
+	}
+
+	public void setHoraireTP(HoraireSession horaireTP) {
+		this.horaireTP = horaireTP;
+	}
+
+	public void setExamI(HoraireSession examI) {
+		this.examI = examI;
+	}
+
+	public void setExamF(HoraireSession examF) {
+		this.examF = examF;
+	}
+
+	public void setNbCredits(int nbCredits) {
+		this.nbCredits = nbCredits;
+	}
 
 	public String getSigle() {
 		return sigle;

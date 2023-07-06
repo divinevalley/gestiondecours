@@ -1,6 +1,7 @@
 package ift1025Tp1;
 
-import java.util.ArrayList;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * TP1 Système de gestion des cours
@@ -19,14 +20,16 @@ public class Tp1 {
     public static void main(String[] args) {
     	TreeMap<String, Cours> repertoireCoursDispo = new TreeMap<>();  // eg. <"IFT1025", objet Cours>
     	
+
+    	
     	
         Scanner scanner = new Scanner(System.in);
-        ArrayList<String> horaire = new ArrayList<String>(); // stocker l'horaire créé 
+        
 
         System.out.println("Menu interactif :");
-        System.out.println("1. Gestion le repertoire du cours (ajouter, modifier, etc)");
+        System.out.println("1. Modifier un cours existant dans le repertoire de cours");
         System.out.println("2. Creer un emploi du temps personnalisé");
-        System.out.println("3. Afficher l'horaire (emploi du temps) créé");
+        System.out.println("3. Créer un nouveau cours pour le repertoire de cours");
         
         System.out.println("0. Quitter");
         
@@ -41,18 +44,21 @@ public class Tp1 {
 
             switch (option) {
                 case "1":
-                    // Gestion de cours : supprimer, modifier, etc.
-                    System.out.println("Option 1 : Gestion de repertoire de cours");
-                    // code ici
+                    System.out.println("Modifier un cours dans le repertoire: ");
                     
+                    // code ici
+                    Utils.menuModifierCours(repertoireCoursDispo); // lancer menu modif
+                    
+                    System.out.println("de retour dans menu MAIN");
                     break;
                 case "2":
-                    System.out.println("Option 2 : ");
+                    System.out.println("Option 2 : "); // emploi du temps personnalisé
                     
                     break;
                 case "3":
-                    System.out.println("Option 3 : Afficher l'horaire (emploi du temps) créé");//?? set les diffenrents messages 
-                    System.out.println("Horaire : " + horaire);
+                    System.out.println("Option 3 : créer un nouveau cours"); 
+                    Utils.creerNvCours(repertoireCoursDispo);
+                    System.out.println("de retour dans menu MAIN");
 
                     break;
                 case "0":
