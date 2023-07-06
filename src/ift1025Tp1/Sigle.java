@@ -7,6 +7,9 @@ Q : numéros peut commencer par 0 ? (si oui, faudrait utiliser String)
 faudrait être en ordre alphabétique dans une liste String 
 
  * */
+
+
+// plus besoin de cette classe ? 
 public class Sigle {
 	//attributs
 	private String matiere;

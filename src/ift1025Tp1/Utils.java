@@ -1,66 +1,138 @@
 package ift1025Tp1;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class Utils {
-    private static ArrayList<String> listeCoursDispo = new ArrayList<String>();
-    // ^ XXX : ah je voyais ça plutôt comme un truc dans le pgrm MAIN général, parce qu'on a pas 
-    // besoin d'instancier plusieurs fois un objet ... genre une seule liste de tout le repertoire, 
-    // donc pas besoin d'instancier quoi que ce soit tu vois. A mon avis. je vais déplacer ça dans main. 
-    // Autre remarque : d'ailleurs si tu veux que ce soit alphabétisé, on pourrait mettre ça dans un TreeSet 
-    // (les Trees sont triés hihi :D ) 
-   
-    public static void ajouterCours(String Cours) {
-        listeCoursDispo.add(Cours);
-    }
-    // XXX: Ca marche bien dans la structure que tu as créée, c'est bien. 
-    // Par contre au lieu de prendre un String cours, ça devrait être plutôt juste un objet Cours cours. 
-    // càd : ajouterCours(Cours cours)
-
-    public static void modifierCours(String coursAncien, String coursNouveau) {
-        int index = listeCoursDispo.indexOf(coursAncien);
-        if (index != -1) {
-            listeCoursDispo.set(index, coursNouveau);
-            System.out.println("Le cours a été modifié avec succès.");
-        } else {
-            System.out.println("Le cours spécifié n'existe pas dans la liste.");
-        }
-        // XXX : je vois la logique ici ! mais faudrait mobiliser l'Objet cours
-        // je me demande ce qu'on devrait proposer comme modification dans le cours, peut être les horaires ?
-        // dans ce cas, on peut appeler l'objet Cours pour pouvoir accéder à ses horaires, etc. 
-    }
-
-    public static void supprimerCours(String Cours) {
-        boolean supprime = listeCoursDispo.remove(Cours);
-        if (supprime) {
-            System.out.println("Le cours a été supprimé avec succès.");
-        } else {
-            System.out.println("Le cours spécifié n'existe pas dans la liste.");
-        }
-    }
-
-    public static void creerNvCours() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Entrez le nom du cours : ");
-        String nomCours = scanner.nextLine();
-
-        // Demander d'autres informations sur le cours (horaires, etc.)
-
-        // Ajouter le cours à la liste
-        listeCoursDispo.add(nomCours);  // XXX : <-- pour la cohérence de ce que tu as fait, je suggererait lappel à la fonction ajouterCours() 
-        // (si jamais il y a du code à l'intérieur de cette fonction par ex, pour vérifier que le cours est valide, etc, 
-        // ce serait bien de tout garder en une fonction multi usage ;) )
-
-        System.out.println("Le cours a été créé avec succès.");
-    }
 
 
-public Utils() {
-    // TODO Auto-generated constructor stub
-}
+	public static void ajouterCours(Cours cours, TreeMap<String, Cours> repertoireCours) {
+		repertoireCours.put(cours.getSigle(), cours);        
+	}
 
-// XXX : ^pas besoin d'instancier, on va juste utiliser Utils pour "ranger" nos fonctions pour que ce soit plus joli 
-// dans la partie main
+
+	public static void menuModifierCours(Cours coursAncien, Cours coursNouveau, TreeMap<String, Cours> repertoireCours) {
+		System.out.println(repertoireCours);
+
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("Saisir le sigle du cours que vous souhaitez modifier (eg. \"IFT1025\"): ");
+		System.out.println("ou faites le 0 pour quitter");
+
+		boolean continuer = true;
+		while (continuer) {
+			String sigleSaisi = scanner.nextLine().trim();
+			Cours coursAModifier = new Cours(); 
+			if (repertoireCours.containsKey(sigleSaisi)) { // verifier cours existe
+				coursAModifier = repertoireCours.get(sigleSaisi);
+				sigleSaisi = "ok";
+			}
+
+
+			switch (sigleSaisi) {
+			case "ok":
+				
+				modifierCours(coursAModifier); // lancer les menus
+				
+				break;
+			case "0":
+				// Quitter
+				System.out.println("Option 0 : Quitter");
+				continuer = false;
+				break;
+			default:
+				System.out.println("Option invalide. Veuillez choisir une option valide.");
+				break;
+			}
+		}
+	}
+	
+	public static void modifierCours(Cours coursAModifier) {
+		System.out.println("vous avez sélectionné le cours suivant :");
+		System.out.println(coursAModifier); 
+		/* eg. "Cours [1. horaireTH=" + horaireTH + ", 
+		2. horaireTP=" + horaireTP + ", 
+		3. examI=" + examI + ", 
+		4.examF=" + examF
+		+ ", 
+		5.sigle=" + sigle + ", 
+		6.nbCredits=" + nbCredits + "]"; */
+		
+		System.out.println("Veuillez choisir le numero correspondant au parametre que vous souhaitez modifier");
+		System.out.println("(ou faites le 0 pour quitter) : ");
+		Scanner scanner = new Scanner(System.in);
+		
+		boolean continuer = true;
+		while(continuer) {
+			String option = scanner.nextLine().trim();
+			
+			switch (option) {
+			
+			case "0":
+				// Quitter
+				System.out.println("Option 0 : Quitter");
+				continuer = false;
+				break;
+			case "1":
+				// ... 
+				break;
+			case "2":
+				// ... 
+				break;
+			case "3":
+				// ... 
+				break;
+			case "4":
+				// ... 
+				break;
+			case "5":
+				// ... 
+				break;
+			case "6":
+				// ... 
+				break;
+				
+			default:
+				System.out.println("Option invalide. Veuillez choisir une option valide.");
+				break;
+			}
+			
+		}
+		
+	}
+
+	public static void supprimerCours(String sigleCours, TreeMap<String, Cours> repertoireCours) {
+		if (repertoireCours.containsKey(sigleCours)){
+			repertoireCours.remove(sigleCours);
+			System.out.println("Le cours a été supprimé avec succès.");
+		} else {
+			System.out.println("Le cours spécifié n'existe pas dans la liste.");
+		}
+	}
+
+	public static void creerNvCours(TreeMap<String, Cours> repertoireCours) {
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.print("Entrez le sigle du cours : ");
+		String sigleNvCours = scanner.nextLine();
+
+		System.out.print("Entrez le nombre de credits du cours : ");
+		int nbCredits = scanner.nextInt();
+
+		Cours nvCours = new Cours(sigleNvCours, nbCredits);
+
+		// Demander d'autres informations sur le cours (horaires, etc.) 
+		// ... 
+		// TODO
+		// ...
+
+		// Ajouter le cours à la liste
+		repertoireCours.put(sigleNvCours, nvCours);
+		ajouterCours(nvCours, repertoireCours);  
+
+		System.out.println("Le cours a été créé avec succès.");
+	}
+
+
 
 }

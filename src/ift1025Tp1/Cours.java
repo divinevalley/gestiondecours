@@ -1,16 +1,14 @@
 package ift1025Tp1;
 
-
-
 public class Cours {
 
 	// attributs 
-	private final HoraireSession horaireTH;  // XXX : jsp pourquoi final ? pour moi on veut avoir la possibilité de les modifier 
-	private final HoraireSession horaireTP; // (donc on va mettre des setters. peut être eclipse te l'a proposé pcq tu n'as pas 
-	private final HoraireSession examI;  // encore mis de setters ? ) 
-	private final HoraireSession examF;
-	private final Sigle sigle;
-	int nbCrédits;
+	private HoraireSession horaireTH;  
+	private HoraireSession horaireTP; 
+	private HoraireSession examI;  
+	private HoraireSession examF;
+	private String sigle;
+	int nbCredits;
 
 
 	/**
@@ -22,28 +20,26 @@ public class Cours {
 	 */
 
 	//constructeur 
-	public Cours(HoraireSession horaireTH, HoraireSession horaireTP) {
-		this.horaireTH = new HoraireSession();
-		this.horaireTP = new HoraireSession();
-		this.examI = new HoraireSession();
-		this.examF = new HoraireSession();
-			this.sigle = new Sigle();
+	public Cours(String sigle, int nbCredits) {
+		this.sigle = sigle;		
+		this.nbCredits = nbCredits;
+		// idée ici : TGDE va créer en mettant juste le sigle (dans un premier temps) 
+		// et ensuite on va lui proposer de mettre les autres attributs 
+		// nb credits, horairesTH, horaireTP, examI, examF
 	}
-	// XXX : ^ Ok j'essaie de te guider dans la logique : imagine au moment où tu va vouloir instancier un Cours 
-	// (càd créer un cours), qu'est ce que tu va vouloir mettre par défaut ? (imagine d'être la TGDE)
-	// probablement au moins au début le sigle 
-	// et par la suite mettre les horaires (les autres attributs)
-	// donc j'imaginerais plutôt mettre comme paramètre ici juste le String + int pour le sigle, et puis à l'intérieur
-	// du constructuer, on peut instancier un objet Sigle avec cette information 
+	
+	//constructeur pour initialiser
+	public Cours() {
+	}
 	
    //getter et setters 
 	public int getNbCrédits() {
-		return nbCrédits;
+		return nbCredits;
 	}
 
 
 	public void setNbCrédits(int nbCrédits) {
-		this.nbCrédits = nbCrédits;
+		this.nbCredits = nbCrédits;
 	}
 
 
@@ -66,10 +62,21 @@ public class Cours {
 		return examF;
 	}
 
-
-	public Sigle getSigle() {
+	public String getSigle() {
 		return sigle;
 	}
+
+	public void setSigle(String sigle) {
+		this.sigle = sigle;
+	}
+
+	@Override
+	public String toString() {
+		return "Cours: \n1. horaireTH=" + horaireTH + ", \n2. horaireTP=" + horaireTP + ", \n3. examI=" + examI + ", \n4.examF=" + examF
+				+ ", \n5.sigle=" + sigle + ", \n6.nbCredits=" + nbCredits;
+	}
 	
+	
+
 
 }
