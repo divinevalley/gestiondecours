@@ -6,9 +6,7 @@ import java.time.format.DateTimeFormatter;
 /*
  * 
 attributs : heureDébut, heureFin
-
 (eg. 08:30, 10:30) utiliser Calendar localtime
-
 */
 
 public class HoraireHeure {
@@ -17,12 +15,12 @@ public class HoraireHeure {
 	private LocalTime heureDebut;
 	private LocalTime heureFin;
 	
-	
+	// constructeur
 	public HoraireHeure(String heureDebutString, String heureFinString) {
-		
-		
 		this.heureDebut = parseHeure(heureDebutString);
 		this.heureFin = parseHeure(heureFinString);
+		
+		// TODO verifier heure fin apres debut 
 	}
 	
 	public LocalTime parseHeure(String heureAParser) {
@@ -48,5 +46,12 @@ public class HoraireHeure {
 	public void setHeureFin(String heureFin) {
 		this.heureFin = parseHeure(heureFin);
 	}
+
+	@Override
+	public String toString() {
+		return "HoraireHeure [heureDebut=" + heureDebut + ", heureFin=" + heureFin + "]";
+	}
+	
+	
 
 }

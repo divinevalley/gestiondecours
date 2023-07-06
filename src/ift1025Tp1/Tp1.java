@@ -19,19 +19,15 @@ import java.util.TreeMap;
 public class Tp1 {
     public static void main(String[] args) {
     	TreeMap<String, Cours> repertoireCoursDispo = new TreeMap<>();  // eg. <"IFT1025", objet Cours>
-    	
-
-    	
-    	
         Scanner scanner = new Scanner(System.in);
         
-
-        System.out.println("Menu interactif :");
-        System.out.println("1. Modifier un cours existant dans le repertoire de cours");
-        System.out.println("2. Creer un emploi du temps personnalisé");
-        System.out.println("3. Créer un nouveau cours pour le repertoire de cours");
+        String menuMain = "Menu interactif :\n" + 
+        		"1. Visualiser tous les cours et/ou modifier un cours existant\n" +
+        		"2. Creer un emploi du temps personnalisé\n" + 
+        		"3. Créer un nouveau cours pour le repertoire de cours\n" + 
+        		"0. Quitter";
         
-        System.out.println("0. Quitter");
+        System.out.println(menuMain);
         
         boolean continuer = true;
 
@@ -47,7 +43,7 @@ public class Tp1 {
                     System.out.println("Modifier un cours dans le repertoire: ");
                     
                     // code ici
-                    Utils.menuModifierCours(repertoireCoursDispo); // lancer menu modif
+                    Utils.menuModifierCours(repertoireCoursDispo, scanner); // lancer menu modif
                     
                     System.out.println("de retour dans menu MAIN");
                     break;
@@ -57,9 +53,9 @@ public class Tp1 {
                     break;
                 case "3":
                     System.out.println("Option 3 : créer un nouveau cours"); 
-                    Utils.creerNvCours(repertoireCoursDispo);
+                    Utils.creerNvCours(repertoireCoursDispo, scanner);
                     System.out.println("de retour dans menu MAIN");
-
+                    System.out.println(menuMain);
                     break;
                 case "0":
                     // Quitter
@@ -75,6 +71,7 @@ public class Tp1 {
         }
 
         System.out.println("Fin de la modification");
+        scanner.close();
     }
 }
 

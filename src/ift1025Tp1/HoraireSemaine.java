@@ -1,5 +1,7 @@
 package ift1025Tp1;
 
+import java.util.InputMismatchException;
+
 public class HoraireSemaine {
 
 	//attributs:
@@ -9,11 +11,19 @@ public class HoraireSemaine {
 	//(eg. jourDeLaSemaine = lundi, horaireHeure = comporte heureDébut/Fin)
 	// lun mar mer jeu ven (pas sam dim)
 	
-	public HoraireSemaine(String jourDeLaSemaine, HoraireHeure horaireHeure) {
-		if (jourDeLaSemaine.equalsIgnoreCase("lun") || jourDeLaSemaine.equalsIgnoreCase("mar") || jourDeLaSemaine.equalsIgnoreCase("mer") || jourDeLaSemaine.equalsIgnoreCase("jeu") || jourDeLaSemaine.equalsIgnoreCase("ven")) {
+	// constructeur
+	public HoraireSemaine(String jourDeLaSemaine) {
+		if (jourDeLaSemaine.equalsIgnoreCase("lun") || jourDeLaSemaine.equalsIgnoreCase("mar") || 
+				jourDeLaSemaine.equalsIgnoreCase("mer") || jourDeLaSemaine.equalsIgnoreCase("jeu") || 
+				jourDeLaSemaine.equalsIgnoreCase("ven")) {
 			this.jourDeLaSemaine = jourDeLaSemaine;
-			this.horaireHeure = horaireHeure;
+		} else {
+			throw new InputMismatchException();
 		}
+	}
+	
+	//constructeur pour initialiser
+	public HoraireSemaine() {
 	}
 
 	public String getJourDeLaSemaine() {
@@ -30,6 +40,11 @@ public class HoraireSemaine {
 
 	public void setHoraireHeure(HoraireHeure horaireHeure) {
 		this.horaireHeure = horaireHeure;
+	}
+
+	@Override
+	public String toString() {
+		return "HoraireSemaine [jourDeLaSemaine=" + jourDeLaSemaine + ", horaireHeure=" + horaireHeure + "]";
 	}
 
 	 
