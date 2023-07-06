@@ -1,5 +1,14 @@
 package ift1025Tp1;
 
+/**
+ * TP1 Système de gestion des cours
+ * IFT 1025 Programmation 2 
+ * Eté 2023  
+ * Juillet 2023 
+ * 
+ * @author mimit, Deanna Wung
+ * 
+ */
 
 import java.util.Scanner;
 import java.util.ArrayList;
