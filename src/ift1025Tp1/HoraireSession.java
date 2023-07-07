@@ -60,6 +60,22 @@ public class HoraireSession {
 		horaireSemaine.setHoraireHeure(newHoraireHeure);
 		this.horaireSemaine.add(horaireSemaine);
 	}
+	
+	public boolean conflit(HoraireSession autre) {
+		// d'abord checker si overlap entre dates
+		if (autre.dateDebut.isBefore(this.dateFin) && this.dateFin.isAfter(autre.dateDebut)) {
+			// checker si conflit jour 
+			for (HoraireSemaine horaire : this.horaireSemaine) {
+				for (HoraireSemaine autreHoraire: autre.horaireSemaine) {
+					return horaire.conflit(autreHoraire);					
+				}
+			}
+		}
+		return false;
+	}
+	
+	// TODO calculer conflit si examen
+	
 
 	@Override
 	public String toString() {

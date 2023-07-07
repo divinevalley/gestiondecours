@@ -10,6 +10,7 @@ public class HoraireSemaine {
 	
 	//(eg. jourDeLaSemaine = lundi, horaireHeure = comporte heureDébut/Fin)
 	// lun mar mer jeu ven (pas sam dim)
+
 	
 	// constructeur
 	public HoraireSemaine(String jourDeLaSemaine) {
@@ -41,6 +42,16 @@ public class HoraireSemaine {
 	public void setHoraireHeure(HoraireHeure horaireHeure) {
 		this.horaireHeure = horaireHeure;
 	}
+	
+	
+	public boolean conflit(HoraireSemaine autre) {
+		if (this.jourDeLaSemaine.equals(autre.jourDeLaSemaine)) { // if meme jour	
+			if (this.horaireHeure.conflit(autre.horaireHeure)){ // et if conflit
+				return true;
+			}
+		}
+		return false;
+	}
 
 	@Override
 	public String toString() {
@@ -48,13 +59,5 @@ public class HoraireSemaine {
 				+ (horaireHeure != null ? horaireHeure : "(horaire (heures) non saisis)");
 	}
 
-//	@Override
-//	public String toString() {
-//		return "les " + jourDeLaSemaine + ", " + horaireHeure;
-//	}
-
-	 
-
-	
 
 }

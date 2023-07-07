@@ -344,6 +344,11 @@ public class Utils {
 		}
 		return horaireHeure;
 	}
+	
+	
+	public static void creerEmploiDuTemps(Scanner scanner) {
+		
+	}
 
 
 }

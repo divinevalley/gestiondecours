@@ -16,6 +16,8 @@ public class HoraireHeure {
 	private LocalTime heureDebut;
 	private LocalTime heureFin;
 	
+
+	
 	// constructeur
 	public HoraireHeure(String heureDebutString, String heureFinString) throws DateTimeParseException {
 		this.heureDebut = parseHeure(heureDebutString);
@@ -40,11 +42,9 @@ public class HoraireHeure {
 		return heureDebut;
 	}
 
-
 	public void setHeureDebut(String heureDebut) throws DateTimeParseException {
 		this.heureDebut = parseHeure(heureDebut);
 	}
-
 
 	public LocalTime getHeureFin() {
 		return heureFin;
@@ -55,6 +55,13 @@ public class HoraireHeure {
 		this.heureFin = parseHeure(heureFin);
 	}
 
+	public boolean conflit(HoraireHeure autre) {
+		if (this.heureFin.isAfter(autre.heureDebut) && this.heureDebut.isBefore(autre.heureFin)) {
+			return true;
+		} 
+		return false;
+	}
+	
 	@Override
 	public String toString() {
 		return heureDebut + "-" + heureFin + ".";

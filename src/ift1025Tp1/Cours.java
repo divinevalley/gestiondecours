@@ -1,6 +1,6 @@
 package ift1025Tp1;
 
-public class Cours implements Comparable<Cours> {
+public class Cours implements Comparable<Cours> { // implements Comparable pour être trié dans Set (ordre alphabetique)
 
 	// attributs 
 	private HoraireSession horaireTH;  
@@ -8,7 +8,7 @@ public class Cours implements Comparable<Cours> {
 	private HoraireSession examI;  
 	private HoraireSession examF;
 	private String sigle;
-	int nbCredits;
+	private int nbCredits;
 
 
 	/**
@@ -72,8 +72,6 @@ public class Cours implements Comparable<Cours> {
 	public HoraireSession getExamF() {
 		return examF;
 	}
-	
-	
 
 	public void setHoraireTH(HoraireSession horaireTH) {
 		this.horaireTH = horaireTH;
@@ -101,6 +99,12 @@ public class Cours implements Comparable<Cours> {
 
 	public void setSigle(String sigle) {
 		this.sigle = sigle.toUpperCase();
+	}
+	
+	public boolean conflit(Cours autre) {
+		// TODO implementer
+		// if 
+		return false;
 	}
 
 

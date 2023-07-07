@@ -6,56 +6,64 @@ public class EmploiDuTemps {
 	//attributs : 
 	private ArrayList<Cours> listeCours;
 	private int nbCreditMax;
+	private int nbCreditsTotal;
 
 	
 	// constructeur : 
 	public EmploiDuTemps(int nbCreditMax) {
 		this.nbCreditMax = nbCreditMax;
+		this.nbCreditsTotal=0;
 	}
 	
-	public int getNbCrédits() { // compter nb de credits
-		int nbCredits = 0;
-		for (Cours cours : listeCours) {
-			nbCredits += cours.getNbCredits();
-		}
-		return nbCredits;
+	public int getNbCreditsTotal() {
+		return nbCreditsTotal;
 	}
 		
 	//fonctions : 
 	public void ajouterCours (Cours cours) {
-		if (calculerConflit(cours)) { // si conflit existe 
-			System.out.println("conflit");
-		} else {
+		if (calculerConflit(cours) || depasseMax(cours)) { // si conflit existe 
+			System.out.println("conflit"); //TODO, throw exception?
+		} else { // ok pour ajouter
 			listeCours.add(cours);
+			nbCreditsTotal+= cours.getNbCredits();
 		}
 	}
 	
 	public void supprimerCours(Cours cours) {	
 		if (listeCours.contains(cours)) {
 			listeCours.remove(cours);
+			nbCreditsTotal -= cours.getNbCredits();
 		} // TODO gerer si jamais n'existe pas 
 	}
 	
 			 
 	//fonctions annexe : 
+	// return TRUE si conflit
 	public boolean calculerConflit (Cours cours){
-		
-		// TODO: implementer
-		// ...
-		
+		//parcourir tous les cours deja inscrit, identifier si problem
+		for (Cours coursDejaInscrit : this.listeCours) {
+			if(coursDejaInscrit.conflit(cours)) {
+				return true;
+			}
+		}
 		return false;
 	}
-	// soit trop proche ou superposé, si plus grand que le nombre de crédit max  (10 crédit max) 
-	//faire afficher un message : doit //diminuer le nombre de crédit 
-	// XXX : ^ c'est bien en terme de la signature et le type booléen
+	
+	// return TRUE si depasse max
+	public boolean depasseMax(Cours cours) {
+		int nbCreditsSiAjoute = nbCreditsTotal + cours.getNbCredits();
+		if (nbCreditsSiAjoute > nbCreditMax) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 
-//afficher horaire 
+	//afficher horaire 
 	@Override
 	public String toString() {
-		return "EmploiDuTemps [listeCours=" + listeCours + ", nbCreditMax=" + nbCreditMax + "]";
+		return "EmploiDuTemps:\n" + listeCours + ", max credits:" + nbCreditMax + ", nb credits: " + nbCreditsTotal;
 	}
-	// XXX : ^pas finalisé mais ceci peut être généré automatiquement aussi dans tes options ("sources" dans eclipse)  
-	
 	 
 }
