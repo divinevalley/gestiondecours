@@ -15,7 +15,7 @@ public class Utils {
 		System.out.println("Voici tous les cours du repertoire : ");
 		System.out.println(repertoireCours);
 
-
+		// TODO numéroter  les cours plutôt que demander le sigle ? 
 		String optionsMenuAAfficher = "Saisir le sigle du cours que vous souhaitez modifier (eg. \"IFT1025\")."
 				+ " \nou faites le 0 pour quitter: ";
 		System.out.println(optionsMenuAAfficher);
@@ -31,7 +31,7 @@ public class Utils {
 
 			switch (sigleSaisi) {
 			case "ok":
-				modifierCours(coursAModifier, repertoireCours); // lancer les menus
+				modifierCours(coursAModifier, repertoireCours, scanner); // lancer les menus
 				// de retour dans menu 
 				System.out.println(optionsMenuAAfficher);
 				break;
@@ -46,7 +46,7 @@ public class Utils {
 	}
 
 	// une fois un certain Cours est choisi, proposer un menu d'options de modifications
-	public static void modifierCours(Cours coursAModifier, TreeMap<String, Cours> repertoireCours) {
+	public static void modifierCours(Cours coursAModifier, TreeMap<String, Cours> repertoireCours, Scanner scanner) {
 		System.out.println("vous avez sélectionné le cours suivant :");
 		String menuAAfficher = coursAModifier + "7. supprimer ce cours du repertoire" + 
 				"\nVeuillez choisir le numero correspondant au parametre que vous souhaitez modifier" + 
@@ -63,7 +63,7 @@ public class Utils {
 		6.nbCredits=" + nbCredits */
 
 		System.out.println(menuAAfficher);
-		Scanner scanner = new Scanner(System.in);
+		
 
 		boolean continuer = true;
 		while(continuer) {
@@ -81,6 +81,8 @@ public class Utils {
 				break;
 			case "2": //horaireTP
 				// ... 
+				HoraireSession nvHoraireSessionTH = inputHoraireSession("nouvel horaire pour cours THEORIQUE : ",scanner,false);
+				coursAModifier.setHoraireTH(nvHoraireSessionTH);
 				break;
 			case "3": //exam I
 				// ... 
@@ -89,10 +91,14 @@ public class Utils {
 				// ... 
 				break;
 			case "5": //sigle
-				// ... 
+				String nvSigle = scanner.nextLine();
+				coursAModifier.setSigle(nvSigle);
+				System.out.println("sigle modifié à " + nvSigle);
 				break;
 			case "6": //nbcredits
-				// ... 
+				int nvNbCredits = Integer.parseInt(scanner.nextLine());
+				coursAModifier.setNbCrédits(nvNbCredits);
+				System.out.println("Nombre de crédits maintenant : " + nvNbCredits);
 				break;
 			case "7": //supprimer
 				supprimerCours(coursAModifier.getSigle(), repertoireCours);
@@ -107,7 +113,6 @@ public class Utils {
 				break;
 			}
 
-			scanner.close();
 		}
 	}
 
