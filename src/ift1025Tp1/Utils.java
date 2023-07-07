@@ -27,6 +27,8 @@ public class Utils {
 			String optionsMenuAAfficher = "\nSaisir le numero correspondant au cours que vous souhaitez modifier."
 					+ " \n(ou faites le 0 pour quitter)"
 					+ "\n\n cours a modifier=> ";
+			
+//			permettreSelectionCours(repertoireCours, 0);  // TODO <-- implementer
 			System.out.println(optionsMenuAAfficher);
 
 			// recevoir input
@@ -48,7 +50,11 @@ public class Utils {
 		}
 	}
 
-
+	// TODO faire une fonction afficher les cours en ARRAY numéroté, retourner Cours sélectionné
+	private static Cours permettreSelectionCours(TreeSet<Cours> repertoireCours, int selection) {
+		// ... 
+		return null;
+	}
 
 	private static String coursToStringAvecNumero(TreeSet<Cours> repertoireCours) {
 		int numero = 1; //commencer a 1
@@ -190,6 +196,7 @@ public class Utils {
 		}	
 		return nvCours;
 	}
+	
 
 	private static boolean sigleExisteDeja(String sigle, TreeSet<Cours> repertoire) {
 		boolean existe = false;
@@ -346,9 +353,41 @@ public class Utils {
 	}
 	
 	
-	public static void creerEmploiDuTemps(Scanner scanner) {
+	public static void creerEmploiDuTemps(Scanner scanner, TreeSet<Cours> repertoireCours) {
 		
+		EmploiDuTemps emploiDuTemps = new EmploiDuTemps();
+		boolean continuer = true;
+		
+		
+		//instancier
+		while(continuer) {
+			// demander nb de credits
+			try {
+				System.out.print("Entrez le nombre de credits max (eg. 16) : ");
+				int nbCredits = Integer.parseInt(scanner.nextLine());
+				emploiDuTemps = new EmploiDuTemps(nbCredits);				
+				continuer = false; // => c'est bon, sortir boucle
+			} catch (NumberFormatException e) {
+				System.out.println("invalide! Reessayer");
+			}
+		}
+		
+		continuer = true;
+		while(continuer) {
+			System.out.print("Choisissez une option (ou faites le 0 pour terminer) : ");
+			System.out.println("faites r pour voir le repertoire de cours");
+            String input = scanner.nextLine();
+
+            if (input.equals("0")) {
+            	break;
+            } else if (input.equalsIgnoreCase("r")) {
+            	System.out.println(coursToStringAvecNumero(repertoireCours));
+            	
+//            	permettreSelectionCours(repertoireCours, 0); // TODO <- implementer
+            }
+            
+			
+		}
+
 	}
-
-
 }

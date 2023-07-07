@@ -15,6 +15,11 @@ public class EmploiDuTemps {
 		this.nbCreditsTotal=0;
 	}
 	
+	//constructeur pour initialiser
+	public EmploiDuTemps() {
+		
+	}
+	
 	public int getNbCreditsTotal() {
 		return nbCreditsTotal;
 	}
