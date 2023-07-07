@@ -1,8 +1,5 @@
 package ift1025Tp1;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-
 /**
  * TP1 Système de gestion des cours
  * IFT 1025 Programmation 2 
@@ -14,11 +11,11 @@ import java.time.format.DateTimeFormatter;
  */
 
 import java.util.Scanner;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Tp1 {
     public static void main(String[] args) {
-    	TreeMap<String, Cours> repertoireCoursDispo = new TreeMap<>();  // eg. <"IFT1025", objet Cours>
+    	TreeSet<Cours> repertoireCoursDispo = new TreeSet<>();  // eg. <"IFT1025", objet Cours>
         Scanner scanner = new Scanner(System.in);
         
         String menuMain = "Menu interactif :\n" + 

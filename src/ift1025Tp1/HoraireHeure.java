@@ -49,9 +49,7 @@ public class HoraireHeure {
 
 	@Override
 	public String toString() {
-		return "HoraireHeure [heureDebut=" + heureDebut + ", heureFin=" + heureFin + "]";
+		return heureDebut + "-" + heureFin + ".";
 	}
-	
-	
 
 }

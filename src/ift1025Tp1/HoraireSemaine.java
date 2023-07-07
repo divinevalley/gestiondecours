@@ -44,7 +44,7 @@ public class HoraireSemaine {
 
 	@Override
 	public String toString() {
-		return "HoraireSemaine [jourDeLaSemaine=" + jourDeLaSemaine + ", horaireHeure=" + horaireHeure + "]";
+		return jourDeLaSemaine + ": " + horaireHeure;
 	}
 
 	 

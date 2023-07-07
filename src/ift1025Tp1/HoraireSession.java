@@ -65,8 +65,7 @@ public class HoraireSession {
 
 	@Override
 	public String toString() {
-		return "HoraireSession [dateDebut=" + dateDebut + ", dateFin=" + dateFin + ", horaireSemaine=" + horaireSemaine
-				+ "]";
+		return "DateDebut: " + dateDebut + ", DateFin:" + dateFin + ", " + horaireSemaine;
 	}
 
 	

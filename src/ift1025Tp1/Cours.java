@@ -1,6 +1,6 @@
 package ift1025Tp1;
 
-public class Cours {
+public class Cours implements Comparable<Cours> {
 
 	// attributs 
 	private HoraireSession horaireTH;  
@@ -94,8 +94,14 @@ public class Cours {
 
 	@Override
 	public String toString() {
-		return "Cours: \n1. horaireTH=" + horaireTH + ", \n2. horaireTP=" + horaireTP + ", \n3. examI=" + examI + ", \n4.examF=" + examF
-				+ ", \n5.sigle=" + sigle + ", \n6.nbCredits=" + nbCredits;
+		return "Cours: " + sigle + " \n1. horaireTH=" + horaireTH + ", \n2. horaireTP=" + horaireTP 
+				+ ", \n3. examI=" + examI + ", \n4.examF=" + examF
+				+ ", \n5.nbCredits=" + nbCredits;
+	}
+
+	@Override
+	public int compareTo(Cours autre) { // pour trier dans Set : alphabetiser par sigle
+		return this.sigle.compareTo(autre.sigle);
 	}
 	
 	

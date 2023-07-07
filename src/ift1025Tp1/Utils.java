@@ -1,35 +1,34 @@
 package ift1025Tp1;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Utils {
 
-
-	public static void ajouterCours(Cours cours, TreeMap<String, Cours> repertoireCours) {
-		repertoireCours.put(cours.getSigle(), cours);        
-	}
-
-	public static void menuModifierCours(TreeMap<String, Cours> repertoireCours, Scanner scanner) {
+	public static void menuModifierCours(TreeSet<Cours> repertoireCours, Scanner scanner) {
 		System.out.println("Voici tous les cours du repertoire : ");
-		System.out.println(repertoireCours);
+		Cours[] arrayCours = repertoireCours.toArray(new Cours[repertoireCours.size()]);
+		System.out.println(Arrays.toString(arrayCours)); // TODO créer toString pour afficher avec index 
 
-		// TODO numéroter  les cours plutôt que demander le sigle ? 
-		String optionsMenuAAfficher = "Saisir le sigle du cours que vous souhaitez modifier (eg. \"IFT1025\")."
+		String optionsMenuAAfficher = "Saisir le numero correspondant au cours que vous souhaitez modifier."
 				+ " \nou faites le 0 pour quitter: ";
 		System.out.println(optionsMenuAAfficher);
 
 		boolean continuer = true;
 		while (continuer) {
-			String sigleSaisi = scanner.nextLine().trim();
-			Cours coursAModifier = new Cours(); 
-			if (repertoireCours.containsKey(sigleSaisi)) { // verifier cours existe
-				coursAModifier = repertoireCours.get(sigleSaisi);
-				sigleSaisi = "ok";
+			String input = scanner.nextLine().trim();
+			int inputInt = Integer.parseInt(input);
+			Cours coursAModifier = new Cours();
+			
+			if (inputInt < arrayCours.length) {
+				coursAModifier = arrayCours[inputInt];
+				input = "ok";
 			}
+			
 
-			switch (sigleSaisi) {
+			switch (input) {
 			case "ok":
 				modifierCours(coursAModifier, repertoireCours, scanner); // lancer les menus
 				// de retour dans menu 
@@ -46,9 +45,9 @@ public class Utils {
 	}
 
 	// une fois un certain Cours est choisi, proposer un menu d'options de modifications
-	public static void modifierCours(Cours coursAModifier, TreeMap<String, Cours> repertoireCours, Scanner scanner) {
+	public static void modifierCours(Cours coursAModifier, TreeSet<Cours> repertoireCours, Scanner scanner) {
 		System.out.println("vous avez sélectionné le cours suivant :");
-		String menuAAfficher = coursAModifier + "7. supprimer ce cours du repertoire" + 
+		String menuAAfficher = coursAModifier + "\n6. supprimer ce cours du repertoire" + 
 				"\nVeuillez choisir le numero correspondant au parametre que vous souhaitez modifier" + 
 				"\n(ou faites le 0 pour quitter ce menu et retourner en arriere) : ";  
 
@@ -58,15 +57,11 @@ public class Utils {
 		2. horaireTP=" + horaireTP + ", 
 		3. examI=" + examI + ", 
 		4.examF=" + examF
-		+ ", 
-		5.sigle=" + sigle + ", 
-		6.nbCredits=" + nbCredits */
-
-		System.out.println(menuAAfficher);
-		
+		5.nbCredits=" + nbCredits */
 
 		boolean continuer = true;
 		while(continuer) {
+			System.out.println(menuAAfficher); // TODO maj coursAModifier
 			String option = scanner.nextLine().trim();
 
 			switch (option) {
@@ -77,35 +72,32 @@ public class Utils {
 				continuer = false;
 				break;
 			case "1": //horaireTH
-				// ... 
+				HoraireSession nvHoraireSessionTP = inputHoraireSession("nouvel horaire pour cours PRATIQUE (TP) : ",scanner,false);
+				coursAModifier.setHoraireTP(nvHoraireSessionTP);
 				break;
 			case "2": //horaireTP
-				// ... 
 				HoraireSession nvHoraireSessionTH = inputHoraireSession("nouvel horaire pour cours THEORIQUE : ",scanner,false);
 				coursAModifier.setHoraireTH(nvHoraireSessionTH);
 				break;
 			case "3": //exam I
-				// ... 
+				HoraireSession nvHoraireSessionExamI = inputHoraireSession("nouvel horaire pour examen INTRA", scanner, true);
+				coursAModifier.setExamI(nvHoraireSessionExamI);
 				break;
 			case "4": //exam F
-				// ... 
+				HoraireSession nvHoraireSessionExamF = inputHoraireSession("nouvel horaire pour examen FINAL", scanner, true);
+				coursAModifier.setExamI(nvHoraireSessionExamF);
 				break;
-			case "5": //sigle
-				String nvSigle = scanner.nextLine();
-				coursAModifier.setSigle(nvSigle);
-				System.out.println("sigle modifié à " + nvSigle);
-				break;
-			case "6": //nbcredits
+			case "5": //nbcredits
+				System.out.println("nouveau nombre de credits: ");
 				int nvNbCredits = Integer.parseInt(scanner.nextLine());
 				coursAModifier.setNbCrédits(nvNbCredits);
 				System.out.println("Nombre de crédits maintenant : " + nvNbCredits);
 				break;
-			case "7": //supprimer
-				supprimerCours(coursAModifier.getSigle(), repertoireCours);
+			case "6": //supprimer
+				supprimerCours(coursAModifier, repertoireCours);
 
 				// de retour dans menu
 				System.out.println("de retour dans menu modification de cours : ");
-				System.out.println(menuAAfficher);
 				break;
 
 			default:
@@ -116,16 +108,12 @@ public class Utils {
 		}
 	}
 
-	public static void supprimerCours(String sigleCours, TreeMap<String, Cours> repertoireCours) {
-		if (repertoireCours.containsKey(sigleCours)){
-			repertoireCours.remove(sigleCours);
-			System.out.println("Le cours a été supprimé avec succès.");
-		} else {
-			System.out.println("Le cours spécifié n'existe pas dans la liste.");
-		}
+	public static void supprimerCours(Cours coursASupprimer, TreeSet<Cours> repertoireCours) {
+		repertoireCours.remove(coursASupprimer);
+		System.out.println("Le cours spécifié n'existe pas dans la liste.");
 	}
 
-	public static void creerNvCours(TreeMap<String, Cours> repertoireCours, Scanner scanner) {
+	public static void creerNvCours(TreeSet<Cours> repertoireCours, Scanner scanner) {
 		System.out.print("Entrez le sigle du cours : ");
 		String sigleNvCours = scanner.nextLine();
 
@@ -157,8 +145,7 @@ public class Utils {
 		nvCours.setExamF(horaireSessionExamF);
 
 		// Ajouter le cours à la liste (repertoire)
-		repertoireCours.put(sigleNvCours, nvCours);
-		ajouterCours(nvCours, repertoireCours);  
+		repertoireCours.add(nvCours);  
 
 		System.out.println("Le cours a été créé avec succès.");
 	}
@@ -212,10 +199,7 @@ public class Utils {
 				horaireSession.setHoraireSemaine(horaireSemaine);
 				// TODO adapter ca pour examen 
 			} 
-		}
-
-		
-		
+		}	
 		return horaireSession;
 	}
 
