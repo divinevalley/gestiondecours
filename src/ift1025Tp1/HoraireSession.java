@@ -28,7 +28,6 @@ public class HoraireSession {
 	public LocalDate parseDate(String aaaaMMjj) throws DateTimeParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(aaaaMMjj, formatter);
-
 	}
 
 	public LocalDate getDateDebut() {
@@ -51,7 +50,6 @@ public class HoraireSession {
 		return horaireSemaine;
 	}
 
-	// TODO pas besoin 
 	public void setHoraireSemaine(HashSet<HoraireSemaine> horaireSemaine) {
 		this.horaireSemaine = horaireSemaine;
 	}
@@ -65,7 +63,7 @@ public class HoraireSession {
 
 	@Override
 	public String toString() {
-		return "DateDebut: " + dateDebut + ", DateFin:" + dateFin + ", " + horaireSemaine;
+		return "Dates : " + dateDebut + " - " + dateFin + "\t" + horaireSemaine;
 	}
 
 	

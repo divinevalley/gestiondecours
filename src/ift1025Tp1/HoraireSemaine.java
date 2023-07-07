@@ -44,8 +44,14 @@ public class HoraireSemaine {
 
 	@Override
 	public String toString() {
-		return jourDeLaSemaine + ": " + horaireHeure;
+		return (jourDeLaSemaine != null ? jourDeLaSemaine + ", " : "(jour non saisi), ")
+				+ (horaireHeure != null ? horaireHeure : "(horaire (heures) non saisis)");
 	}
+
+//	@Override
+//	public String toString() {
+//		return "les " + jourDeLaSemaine + ", " + horaireHeure;
+//	}
 
 	 
 

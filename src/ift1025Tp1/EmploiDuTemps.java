@@ -16,7 +16,7 @@ public class EmploiDuTemps {
 	public int getNbCrédits() { // compter nb de credits
 		int nbCredits = 0;
 		for (Cours cours : listeCours) {
-			nbCredits += cours.getNbCrédits();
+			nbCredits += cours.getNbCredits();
 		}
 		return nbCredits;
 	}

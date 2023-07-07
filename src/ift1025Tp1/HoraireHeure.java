@@ -2,6 +2,7 @@ package ift1025Tp1;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /*
  * 
@@ -16,14 +17,21 @@ public class HoraireHeure {
 	private LocalTime heureFin;
 	
 	// constructeur
-	public HoraireHeure(String heureDebutString, String heureFinString) {
+	public HoraireHeure(String heureDebutString, String heureFinString) throws DateTimeParseException {
 		this.heureDebut = parseHeure(heureDebutString);
 		this.heureFin = parseHeure(heureFinString);
-		
 		// TODO verifier heure fin apres debut 
 	}
 	
-	public LocalTime parseHeure(String heureAParser) {
+	public HoraireHeure(String heureDebutString) throws DateTimeParseException {
+		this.heureDebut = parseHeure(heureDebutString);
+	}
+	
+	// pour initialiser
+	public HoraireHeure() {
+	}
+	
+	public LocalTime parseHeure(String heureAParser) throws DateTimeParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return LocalTime.parse(heureAParser, formatter);
 	}
@@ -33,7 +41,7 @@ public class HoraireHeure {
 	}
 
 
-	public void setHeureDebut(String heureDebut) {
+	public void setHeureDebut(String heureDebut) throws DateTimeParseException {
 		this.heureDebut = parseHeure(heureDebut);
 	}
 
@@ -43,7 +51,7 @@ public class HoraireHeure {
 	}
 
 
-	public void setHeureFin(String heureFin) {
+	public void setHeureFin(String heureFin) throws DateTimeParseException {
 		this.heureFin = parseHeure(heureFin);
 	}
 

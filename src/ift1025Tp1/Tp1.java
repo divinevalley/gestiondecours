@@ -16,9 +16,35 @@ import java.util.TreeSet;
 public class Tp1 {
     public static void main(String[] args) {
     	TreeSet<Cours> repertoireCoursDispo = new TreeSet<>();  // eg. <"IFT1025", objet Cours>
+    	
+    	// exemple repertoire: 
+    	HoraireSession sessionHiver = new HoraireSession("2023-01-01", "2023-05-05");
+    	sessionHiver.addHoraireSemaine("lun", "08:00", "10:00");
+    	HoraireSession examDate = new HoraireSession("2023-03-03", "2023-03-03");
+    	examDate.addHoraireSemaine("mar", "08:00", "12:00");
+    	
+    	Cours cours1 = new Cours(sessionHiver, sessionHiver, examDate, examDate, "ift1025", 3);
+    	repertoireCoursDispo.add(cours1);
+    	
+    	Cours cours2 = new Cours(sessionHiver, sessionHiver, examDate, examDate, "ift2015", 3);
+    	repertoireCoursDispo.add(cours2);
+    	
+    	Cours cours3 = new Cours(sessionHiver, sessionHiver, examDate, examDate, "mat1000", 4);
+    	repertoireCoursDispo.add(cours3);
+    	
+    	Cours cours4 = new Cours(sessionHiver, sessionHiver, examDate, examDate, "ift2125", 3);
+    	repertoireCoursDispo.add(cours4);
+    	
+    	Cours cours5 = new Cours(sessionHiver, sessionHiver, examDate, examDate, "ift3090", 3);
+    	repertoireCoursDispo.add(cours5);
+    	
+    	Cours cours6 = new Cours(sessionHiver, sessionHiver, examDate, examDate, "mat1600", 4);
+    	repertoireCoursDispo.add(cours6);
+    	
+    	
         Scanner scanner = new Scanner(System.in);
         
-        String menuMain = "Menu interactif :\n" + 
+        String menuMain = "Menu MAIN :\n" + 
         		"1. Visualiser tous les cours et/ou modifier un cours existant\n" +
         		"2. Creer un emploi du temps personnalisé\n" + 
         		"3. Créer un nouveau cours pour le repertoire de cours\n" + 
@@ -29,23 +55,23 @@ public class Tp1 {
         boolean continuer = true;
 
         while (continuer) {
-
-
+        	
             System.out.print("Choisissez une option (ou faites le 0 pour quitter) : ");
             String option = scanner.nextLine();
-//            scanner.nextLine(); // on vide la ligne de l'entier
 
             switch (option) {
                 case "1":
                     System.out.println("Modifier un cours dans le repertoire: ");
-                    
-                    // code ici
                     Utils.menuModifierCours(repertoireCoursDispo, scanner); // lancer menu modif
                     
                     System.out.println("de retour dans menu MAIN");
+                    System.out.println(menuMain);
                     break;
                 case "2":
                     System.out.println("Option 2 : "); // emploi du temps personnalisé
+                    
+                    // ... (lancer creation emploi du temps) 
+                    
                     
                     break;
                 case "3":
@@ -56,7 +82,7 @@ public class Tp1 {
                     break;
                 case "0":
                     // Quitter
-                    System.out.println("Option 0 : Quitter");
+                    System.out.println("Quitter le programme...");
                     continuer = false;
                     break;
                 default:
@@ -67,7 +93,7 @@ public class Tp1 {
             System.out.println(); 
         }
 
-        System.out.println("Fin de la modification");
+        System.out.println("Fin de programme");
         scanner.close();
     }
 }

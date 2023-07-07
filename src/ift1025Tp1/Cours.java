@@ -19,9 +19,14 @@ public class Cours implements Comparable<Cours> {
 		même date début/fin.
 	 */
 
+	// constructeur pour sigle seul
+	public Cours (String sigle) {
+		this.sigle = sigle.toUpperCase();
+	}
+	
 	//constructeur 
 	public Cours(String sigle, int nbCredits) {
-		this.sigle = sigle;		
+		this.sigle = sigle.toUpperCase();		
 		this.nbCredits = nbCredits;
 		// idée ici : TGDE va créer en mettant juste le sigle (dans un premier temps) 
 		// et ensuite on va lui proposer de mettre les autres attributs 
@@ -32,16 +37,22 @@ public class Cours implements Comparable<Cours> {
 	public Cours() {
 	}
 	
-   //getter et setters 
-	public int getNbCrédits() {
+	
+	// constructeur pour test
+   public Cours(HoraireSession horaireTH, HoraireSession horaireTP, HoraireSession examI, HoraireSession examF,
+			String sigle, int nbCredits) {
+		this.horaireTH = horaireTH;
+		this.horaireTP = horaireTP;
+		this.examI = examI;
+		this.examF = examF;
+		this.sigle = sigle.toUpperCase();
+		this.nbCredits = nbCredits;
+	}
+
+//getter et setters 
+	public int getNbCredits() {
 		return nbCredits;
 	}
-
-
-	public void setNbCrédits(int nbCrédits) {
-		this.nbCredits = nbCrédits;
-	}
-
 
 	public HoraireSession getHoraireTH() {
 		return horaireTH;
@@ -89,22 +100,24 @@ public class Cours implements Comparable<Cours> {
 	}
 
 	public void setSigle(String sigle) {
-		this.sigle = sigle;
+		this.sigle = sigle.toUpperCase();
 	}
+
 
 	@Override
 	public String toString() {
-		return "Cours: " + sigle + " \n1. horaireTH=" + horaireTH + ", \n2. horaireTP=" + horaireTP 
-				+ ", \n3. examI=" + examI + ", \n4.examF=" + examF
-				+ ", \n5.nbCredits=" + nbCredits;
+		return "Cours: " + sigle + (horaireTH != null ? "\n1. cours TH:" + horaireTH + ", " : "pas de TH")
+				+ (horaireTP != null ? "\n2. cours TP:" + horaireTP + ", " : "pas de TP")
+				+ (examI != null ? "\n3. Examen Intra: " + examI + ", " : "(pas d'examen Intra)") + 
+				(examF != null ? "\n4. Examen Final: " + examF + ", " : "(pas d'examen final)")
+				+ (sigle != null ? "\n5. Sigle:" + sigle + ", " : "") + "\n6. Nb credits=" + nbCredits;
 	}
+	
 
 	@Override
 	public int compareTo(Cours autre) { // pour trier dans Set : alphabetiser par sigle
 		return this.sigle.compareTo(autre.sigle);
 	}
-	
-	
 
 
 }
