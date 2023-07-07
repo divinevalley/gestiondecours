@@ -71,7 +71,7 @@ public class Tp1 {
                     System.out.println("Option 2 : "); // emploi du temps personnalisé
                     
                     // ... (lancer creation emploi du temps) 
-                    Utils.creerEmploiDuTemps(scanner); // TODO pas encore fait
+                    Utils.creerEmploiDuTemps(scanner, repertoireCoursDispo); // TODO pas encore fait
                     
                     break;
                 case "3":
