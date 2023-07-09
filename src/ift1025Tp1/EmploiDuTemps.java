@@ -1,18 +1,28 @@
 package ift1025Tp1;
 import java.util.ArrayList;
 
-
 public class EmploiDuTemps {
 	//attributs : 
 	private ArrayList<Cours> listeCours;
 	private int nbCreditMax;
 	private int nbCreditsTotal;
 
+	public class ValidationException extends Exception {
+	    public ValidationException(String message) {
+	        super(message);
+	    }
+	    
+	    public ValidationException() {
+	    	super();
+	    }
+	}
+
 	
 	// constructeur : 
 	public EmploiDuTemps(int nbCreditMax) {
 		this.nbCreditMax = nbCreditMax;
 		this.nbCreditsTotal=0;
+		listeCours = new ArrayList<>();
 	}
 	
 	//constructeur pour initialiser
@@ -25,9 +35,12 @@ public class EmploiDuTemps {
 	}
 		
 	//fonctions : 
-	public void ajouterCours (Cours cours) {
+	public void ajouterCours (Cours cours) throws ValidationException {
+		// TODO calculer depasse max ? 
+//		depasseMax(cours);
+		
 		if (calculerConflit(cours) || depasseMax(cours)) { // si conflit existe 
-			System.out.println("conflit"); //TODO, throw exception?
+			throw new ValidationException("conflit horaire"); 
 		} else { // ok pour ajouter
 			listeCours.add(cours);
 			nbCreditsTotal+= cours.getNbCredits();
@@ -38,7 +51,7 @@ public class EmploiDuTemps {
 		if (listeCours.contains(cours)) {
 			listeCours.remove(cours);
 			nbCreditsTotal -= cours.getNbCredits();
-		} // TODO gerer si jamais n'existe pas 
+		} 
 	}
 	
 			 
@@ -46,8 +59,12 @@ public class EmploiDuTemps {
 	// return TRUE si conflit
 	public boolean calculerConflit (Cours cours){
 		//parcourir tous les cours deja inscrit, identifier si problem
-		for (Cours coursDejaInscrit : this.listeCours) {
-			if(coursDejaInscrit.conflit(cours)) {
+		if (this.listeCours.isEmpty()) {
+			return false;
+		}
+		
+		for (Cours coursDejaInscrit : this.listeCours) { // parcourir tous les cours deja dans emploi du temps
+			if(coursDejaInscrit.conflit(cours)) { // TODO <- fonction pas encore implementee
 				return true;
 			}
 		}

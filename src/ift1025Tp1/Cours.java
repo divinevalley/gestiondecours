@@ -114,7 +114,7 @@ public class Cours implements Comparable<Cours> { // implements Comparable pour 
 				+ (horaireTP != null ? "\n2. cours TP:" + horaireTP + ", " : "pas de TP")
 				+ (examI != null ? "\n3. Examen Intra: " + examI + ", " : "(pas d'examen Intra)") + 
 				(examF != null ? "\n4. Examen Final: " + examF + ", " : "(pas d'examen final)")
-				+ (sigle != null ? "\n5. Sigle:" + sigle + ", " : "") + "\n6. Nb credits=" + nbCredits;
+				+ (sigle != null ? "\n5. Sigle:" + sigle + ", " : "") + "\n6. Nb credits=" + nbCredits + "\n\n";
 	}
 	
 

@@ -1,15 +1,17 @@
 package ift1025Tp1;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.TreeSet;
 
-public class Utils {
+import ift1025Tp1.EmploiDuTemps.ValidationException;
 
+public class Utils {
+	// pour github commands: C:\Users\Deanna\Documents\UdeM\IFT1025 programmation 2\devoirs notés TP\tp1\Tp1\src\ift1025Tp1>
+	
+	
 	// TODO 
-	// verifier sigle existe deja
 	// verifier horaire coherent (pas 09:00 - 08:00)
 	// verifier si conflit horaire au sein d'un meme cours
 	// proposer modification d'une seule partie plutôt que parcourir tout le menu
@@ -21,42 +23,58 @@ public class Utils {
 		while (continuer) {
 
 			//afficher repertoire cours
-			Cours[] arrayCours = repertoireCours.toArray(new Cours[repertoireCours.size()]);
-			System.out.println(coursToStringAvecNumero(repertoireCours)); 
-
+			System.out.println(coursToStringNumerote(repertoireCours));
 			String optionsMenuAAfficher = "\nSaisir le numero correspondant au cours que vous souhaitez modifier."
 					+ " \n(ou faites le 0 pour quitter)"
 					+ "\n\n cours a modifier=> ";
-			
-//			permettreSelectionCours(repertoireCours, 0);  // TODO <-- implementer
 			System.out.println(optionsMenuAAfficher);
 
 			// recevoir input
 			String input = scanner.nextLine().trim();
-			int inputInt = Integer.parseInt(input);
-			int inputIndexCours = inputInt-1; // ajuster pour avoir index
 
-			if (input.equals("0")) { // si veut quitter
-				continuer = false;
-			} else if (inputIndexCours < arrayCours.length) { // si option valide
-				Cours coursAModifier = arrayCours[inputIndexCours]; // retrouver notre objet Cours a modifier 
-				modifierCours(coursAModifier, repertoireCours, scanner); // lancer les menus modifier cours
+			try {
+				// retrouver notre objet Cours a modifier
+				Cours coursAModifier = permettreSelectionCours(repertoireCours, input);
+				
+				if (coursAModifier == null) { // cours va etre null si input = 0 (l'utilisateur veut quitter)
+					continuer = false;
+					break;
+				}
+				
+				// lancer les menus modifier cours
+				modifierCours(coursAModifier, repertoireCours, scanner); 
+				
 				// de retour dans menu 
 				System.out.println(optionsMenuAAfficher);
-
-			} else { // invalide
-				System.out.println("Option invalide. Veuillez choisir une option valide.");
+			} catch (IndexOutOfBoundsException e) {
+				System.out.println("Option invalide. Ce cours n'existe pas. Veuillez choisir une option valide.");
+			} catch (NumberFormatException e) {
+				System.out.println("Invalide. Veuillez saisir un choix (numéro)");
 			}
+			
 		}
 	}
 
-	// TODO faire une fonction afficher les cours en ARRAY numéroté, retourner Cours sélectionné
-	private static Cours permettreSelectionCours(TreeSet<Cours> repertoireCours, int selection) {
-		// ... 
-		return null;
+	// afficher les cours en ARRAY numéroté, retourner Cours sélectionné
+	private static Cours permettreSelectionCours(TreeSet<Cours> repertoireCours, String selection) throws IndexOutOfBoundsException, NumberFormatException {
+		
+		int inputInt = Integer.parseInt(selection); // convertir en int
+		
+		//afficher repertoire cours
+		Cours[] arrayCours = repertoireCours.toArray(new Cours[repertoireCours.size()]);
+		System.out.println(coursToStringNumerote(repertoireCours)); 
+		
+		if (inputInt==0) { // utiliser met 0 si veut quitter, fonction va renvoyer null pour signaler qu'il veut quitter 
+			return null;
+		}
+		
+		// -1 pour avoir numerotation depuis  0 
+		int inputIndexCours = inputInt-1; 
+		
+		return arrayCours[inputIndexCours];  
 	}
-
-	private static String coursToStringAvecNumero(TreeSet<Cours> repertoireCours) {
+	
+	private static String coursToStringNumerote(TreeSet<Cours> repertoireCours) {
 		int numero = 1; //commencer a 1
 		StringBuilder toPrint = new StringBuilder("================================================================\nREPERTOIRE DES COURS\n");
 		for (Cours cours : repertoireCours) {
@@ -353,39 +371,59 @@ public class Utils {
 	}
 	
 	
+	// afficher le repértoire des cours, instancier un objet EmploiDuTemps à partir du input de l'utilisateur
 	public static void creerEmploiDuTemps(Scanner scanner, TreeSet<Cours> repertoireCours) {
 		
+		// tout d'abord, créer un emploi du temps vide
 		EmploiDuTemps emploiDuTemps = new EmploiDuTemps();
+		System.out.println("----------Menu Création d'emploi du temps--------");
+		
 		boolean continuer = true;
 		
-		
-		//instancier
 		while(continuer) {
 			// demander nb de credits
 			try {
-				System.out.print("Entrez le nombre de credits max (eg. 16) : ");
+				System.out.print("Entrez le nombre de credits max pour cet emploi du temps (eg. 16) : ");
 				int nbCredits = Integer.parseInt(scanner.nextLine());
 				emploiDuTemps = new EmploiDuTemps(nbCredits);				
 				continuer = false; // => c'est bon, sortir boucle
 			} catch (NumberFormatException e) {
-				System.out.println("invalide! Reessayer");
+				System.out.println("Invalide! Reessayer");
 			}
 		}
-		
+				
 		continuer = true;
 		while(continuer) {
-			System.out.print("Choisissez une option (ou faites le 0 pour terminer) : ");
-			System.out.println("faites r pour voir le repertoire de cours");
-            String input = scanner.nextLine();
-
-            if (input.equals("0")) {
-            	break;
-            } else if (input.equalsIgnoreCase("r")) {
-            	System.out.println(coursToStringAvecNumero(repertoireCours));
-            	
-//            	permettreSelectionCours(repertoireCours, 0); // TODO <- implementer
-            }
-            
+			System.out.println(coursToStringNumerote(repertoireCours));
+			
+			System.out.println("Votre emploi du temps actuel: ");
+			System.out.println(emploiDuTemps.toString());
+			System.out.println("\n\nVeuillez sélectionner le numéro du cours que vous souhaitez ajouter (eg. \"1\") \n ou faites le 0 pour terminer");
+			Cours coursSelectionne  = new Cours();
+			
+			try {
+				String inputNumeroCours = scanner.nextLine();
+				coursSelectionne = permettreSelectionCours(repertoireCours, inputNumeroCours);
+			} catch (Exception e) {
+				System.out.println("invalide. reessayer");
+			}
+			
+			if (coursSelectionne == null) { // si input == 0 cours renvoye va etre null 
+				continuer = false;
+				System.out.println("voici votre emploi du temps:");
+				System.out.println(emploiDuTemps.toString());
+				break;
+			}
+			
+			System.out.println("Vous avez choisi : " + coursSelectionne.getSigle());
+			
+			try {
+				emploiDuTemps.ajouterCours(coursSelectionne);
+			} catch (ValidationException e) {
+				System.out.println("conflit horaire!");
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 			
 		}
 
