@@ -54,9 +54,9 @@ public class HoraireSession {
 		this.horaireSemaine = horaireSemaine;
 	}
 	
-	public void addHoraireSemaine(String jourSemaineString, String heureDebut, String heureFin) {
+	public void addHoraireSemaine(int jourSemaine, String heureDebut, String heureFin) {
 		HoraireHeure newHoraireHeure = new HoraireHeure(heureDebut, heureFin); // eg. 08:00, 10:00 
-		HoraireSemaine horaireSemaine = new HoraireSemaine(jourSemaineString); // eg. lun
+		HoraireSemaine horaireSemaine = new HoraireSemaine(jourSemaine); // eg. 1 pour lun
 		horaireSemaine.setHoraireHeure(newHoraireHeure);
 		this.horaireSemaine.add(horaireSemaine);
 	}

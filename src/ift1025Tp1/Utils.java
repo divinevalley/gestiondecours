@@ -1,5 +1,7 @@
 package ift1025Tp1;
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -68,12 +70,14 @@ public class Utils {
 			return null;
 		}
 		
-		// -1 pour avoir numerotation depuis  0 
-		int inputIndexCours = inputInt-1; 
+		if (inputInt >= arrayCours.length || inputInt < 0) {
+			throw new IndexOutOfBoundsException();
+		}
 		
-		return arrayCours[inputIndexCours];  
+		return arrayCours[inputInt-1];  // -1 pour avoir numerotation depuis  0 
 	}
 	
+	// transformer repertoire en string pour pouvoir afficher avec numerotation  
 	private static String coursToStringNumerote(TreeSet<Cours> repertoireCours) {
 		int numero = 1; //commencer a 1
 		StringBuilder toPrint = new StringBuilder("================================================================\nREPERTOIRE DES COURS\n");
@@ -269,70 +273,81 @@ public class Utils {
 					continuer = false; // => c'est bon. sortir boucle
 				} catch (DateTimeParseException e) {
 					System.out.println("mauvais format, reessayer:");
-
-					continue;
-					// boucle continue 
+//					continue; // recommencer boucle depuis debut
 				} 
 
-				// déclarer aussi emploi du temps par semaine, uniquement si ce n'est pas un examen
-				HashSet<HoraireSemaine> horaireSemaine = inputHoraireSemaine(scanner); // les lundis de 08:00 - 10:00
-				horaireSession.setHoraireSemaine(horaireSemaine);
-				// TODO adapter ca pour examen 
+
 			} 
+			
+			// prendre input emploi du temps hebdomadaire
+			HashSet<HoraireSemaine> horaireSemaine = inputHoraireSemaine(scanner, estExam, horaireSession.getDateFin()); // eg. les lundis, 08:00 - 10:00
+			horaireSession.setHoraireSemaine(horaireSemaine);
 		}	
 		return horaireSession;
 	}
 
-	public static HashSet<HoraireSemaine> inputHoraireSemaine(Scanner scanner) {
+	// prendre input, add jours de la semaine avec horaires
+	public static HashSet<HoraireSemaine> inputHoraireSemaine(Scanner scanner, boolean estExam, LocalDate dateDebut) {
 		HashSet<HoraireSemaine> setAvecHorairesSemaines = new HashSet<>();
-
-		// add jours de la semaine avec horaires
 		boolean continuer = true;
-		System.out.println("Préciser l'horaire : \nSaisir jour de la semaine au format suivant : lun, mar, mer, jeu, ven : ");
-		System.out.println("(Pour terminer, saisir 0) :");
-
-		//		 horaireSemaine = new HoraireSemaine();
+		
 		while (continuer) {
-			System.out.println("jour: ");
-			// prendre input pour le jour
-			String inputJour = scanner.nextLine(); // eg. lun
+			String inputJour = "";
+			
+			// demander jour seulement si ce n'est pas un examen
+			if (!estExam) {
+				System.out.println("Préciser l'horaire : \nSaisir le numero correspondant au jour de la semaine : \n"
+					+ "1 - lundi, \n"
+					+ "2 - mardi, \n"
+					+ "3 - mercredi, \n"
+					+ "4 - jeudi, \n"
+					+ "5 - vendredi\n"
+					+ "(Si vous avez terminé de saisir l'horaire hebdomadaire, saisir 0) :");
 
-			if (inputJour.equals("0")) { // pour terminer
+			// prendre input pour le jour
+			inputJour = scanner.nextLine(); // eg. "1" pour lundi
+			} else {
+				// si c'est exam, on calcule quel jour c'est selon la date de facon automatique
+				inputJour = dateDebut.getDayOfWeek().getValue()  + "";
+			}
+			
+			if (inputJour.equals("0")) { // 0 pour terminer
 				continuer = false;
 			} else {
 				try {
 					// prendre input pour les horaires pour ce jour, ajouter au Set 
-					System.out.println("partie try: ");
-
-					HoraireSemaine horaireSemaine = new HoraireSemaine(inputJour); // eg. lun
-					HoraireHeure horaireHeure = inputHoraireHeure(inputJour, scanner); // eg. 08:00 debut, 10:00 fin 
+					int inputJourInt = Integer.parseInt(inputJour); // NumberFormatException possible
+					HoraireSemaine horaireSemaine = new HoraireSemaine(inputJourInt); // eg. "1" pour lundi // InputMismatchException possible
+					HoraireHeure horaireHeure = inputHoraireHeure(inputJour, scanner); // eg. 08:00 debut, 10:00 fin  // DateTimeParse Exception possible
 					horaireSemaine.setHoraireHeure(horaireHeure);					
-					System.out.println("Horaire créé : " + horaireSemaine);
 
 					// ajouter au Set 
 					setAvecHorairesSemaines.add(horaireSemaine);
 
 					System.out.println("horaire semaine : " + setAvecHorairesSemaines);
-					System.out.println("Est ce que le cours a lieu un autre jour de la semaine ? "
+					
+					if (estExam) { // si exam, pas besoin de demander si ça prend lieu d'autres jours de la semaine. on s'arrete là.
+						break;
+					}
+					System.out.println("Est-ce que le cours a lieu un autre jour de la semaine ? "
 							+ "Sinon, saisir 0 pour terminer cette partie. "
 							+ "Si oui, saisir l'autre jour de la semaine : ");
 
 				} catch (DateTimeParseException e) {
 					System.out.println("invalide. format requis: hh:mm");
-					//					scanner.nextLine(); // vider input 
 
 				} catch (InputMismatchException e) {
-					System.out.println("invalide. doit etre un des suivants : lun, mar, mer, jeu, ven : ");
-					//					scanner.nextLine(); // vider input 
+					System.out.println("invalide. doit etre entre 1-5 : \n1- lun, 2- mar, 3- mer, 4- jeu, 5- ven : "); 
 
-				} catch(Exception e) { // autre input invalide si jamais 
-					System.out.println("invalide.");
-					//					scanner.nextLine();
+				} catch(NumberFormatException e) {  
+					System.out.println("invalide. reessayer ");
+					e.printStackTrace();
 				}
 			}
 		}
 		return setAvecHorairesSemaines;
 	}
+
 
 	public static HoraireHeure inputHoraireHeure(String msgPrecisionCours, Scanner scanner) {
 		boolean continuer = true;
@@ -372,18 +387,16 @@ public class Utils {
 	
 	
 	// afficher le repértoire des cours, instancier un objet EmploiDuTemps à partir du input de l'utilisateur
-	public static void creerEmploiDuTemps(Scanner scanner, TreeSet<Cours> repertoireCours) {
+	public static EmploiDuTemps creerEmploiDuTemps(Scanner scanner, TreeSet<Cours> repertoireCours, EmploiDuTemps emploiDuTemps) {
 		
 		// tout d'abord, créer un emploi du temps vide
-		EmploiDuTemps emploiDuTemps = new EmploiDuTemps();
-		System.out.println("----------Menu Création d'emploi du temps--------");
+		System.out.println("\n----------Menu Création d'emploi du temps--------");
 		
 		boolean continuer = true;
-		
 		while(continuer) {
 			// demander nb de credits
 			try {
-				System.out.print("Entrez le nombre de credits max pour cet emploi du temps (eg. 16) : ");
+				System.out.print("Entrez le nombre de credits MAX pour cet emploi du temps (eg. 16) : ");
 				int nbCredits = Integer.parseInt(scanner.nextLine());
 				emploiDuTemps = new EmploiDuTemps(nbCredits);				
 				continuer = false; // => c'est bon, sortir boucle
@@ -394,38 +407,89 @@ public class Utils {
 				
 		continuer = true;
 		while(continuer) {
+			//afficher repertoire
 			System.out.println(coursToStringNumerote(repertoireCours));
 			
+			// afficher emploi du temps actuel
 			System.out.println("Votre emploi du temps actuel: ");
 			System.out.println(emploiDuTemps.toString());
 			System.out.println("\n\nVeuillez sélectionner le numéro du cours que vous souhaitez ajouter (eg. \"1\") \n ou faites le 0 pour terminer");
+			
 			Cours coursSelectionne  = new Cours();
+			String inputNumeroCours = scanner.nextLine();
 			
-			try {
-				String inputNumeroCours = scanner.nextLine();
-				coursSelectionne = permettreSelectionCours(repertoireCours, inputNumeroCours);
-			} catch (Exception e) {
-				System.out.println("invalide. reessayer");
-			}
-			
-			if (coursSelectionne == null) { // si input == 0 cours renvoye va etre null 
+			if (inputNumeroCours.equals("0")) {
 				continuer = false;
-				System.out.println("voici votre emploi du temps:");
+				System.out.println("Merci. Voici votre emploi du temps:\n");
 				System.out.println(emploiDuTemps.toString());
 				break;
 			}
 			
-			System.out.println("Vous avez choisi : " + coursSelectionne.getSigle());
-			
+			try {
+				coursSelectionne = permettreSelectionCours(repertoireCours, inputNumeroCours); // retrouver l'objet Cours choisi
+				System.out.println("Vous avez choisi : " + coursSelectionne.getSigle());
+			} catch (NumberFormatException e) {
+				System.out.println("Choix de cours invalide. Reessayer:");
+				continue; // recommencer boucle
+			} catch(IndexOutOfBoundsException e) {
+				System.out.println("Ce cours n'existe pas. Ressayer:");
+				continue; // recommencer boucle 
+			}
+	
+			// seulement si tout va bien, on ajoute le cours 
 			try {
 				emploiDuTemps.ajouterCours(coursSelectionne);
 			} catch (ValidationException e) {
-				System.out.println("conflit horaire!");
+				System.out.println("Conflit horaire! Le cours n'a pas été ajouté.");
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
 			
 		}
+		
+		return emploiDuTemps;
+	}
+	
+	public static EmploiDuTemps modifierEmploiDuTemps(Scanner scanner, EmploiDuTemps emploiDuTemps) {
+		
+		//afficher emploi du temps avec numerotation
+		ArrayList<Cours> listCours = afficherEmploiDuTempsNumerote(emploiDuTemps);
+		
+		boolean continuer = true;
 
+		while(continuer) {
+			System.out.println("sélectionner le numéro du cours à supprimer \n(ou faites le 0 pour quitter/terminer) ");
+			String input = scanner.nextLine();
+			
+			if (input.equals("0")) {
+				continuer = false;
+				break;
+			}
+			
+			try {
+				int inputInt = Integer.parseInt(input);
+				Cours coursSelectionner = listCours.get(inputInt-1); // -1 pour ajuster index
+				emploiDuTemps.supprimerCours(coursSelectionner);
+				listCours = afficherEmploiDuTempsNumerote(emploiDuTemps); // nouvel affichage
+			} catch (NumberFormatException e) {
+				System.out.println("invalide. doit etre un numero. eg. 1\nressayer:");
+			} catch (IndexOutOfBoundsException e) {
+				System.out.println("cours n'existe pas! reesayer:");
+			}
+		}
+		
+		return emploiDuTemps;
+	}
+	
+	private static ArrayList<Cours> afficherEmploiDuTempsNumerote(EmploiDuTemps emploiDuTemps){
+		int i = 1; //commencer numerotation a 1
+		ArrayList<Cours> listCours = emploiDuTemps.getListeCours();
+		for(Cours cours : listCours) {
+			System.out.println(">>>(" + i + ")<<<");
+			System.out.println(cours.toString());
+			i++;
+		}
+		
+		return listCours;
 	}
 }

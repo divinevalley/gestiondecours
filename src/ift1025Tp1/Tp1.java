@@ -16,12 +16,13 @@ import java.util.TreeSet;
 public class Tp1 {
     public static void main(String[] args) {
     	TreeSet<Cours> repertoireCoursDispo = new TreeSet<>();  // eg. <"IFT1025", objet Cours>
+    	EmploiDuTemps emploiDuTemps = new EmploiDuTemps();
     	
     	// exemple repertoire: 
     	HoraireSession sessionHiver = new HoraireSession("2023-01-01", "2023-05-05");
-    	sessionHiver.addHoraireSemaine("lun", "08:00", "10:00");
+    	sessionHiver.addHoraireSemaine(1, "08:00", "10:00");
     	HoraireSession examDate = new HoraireSession("2023-03-03", "2023-03-03");
-    	examDate.addHoraireSemaine("mar", "08:00", "12:00");
+    	examDate.addHoraireSemaine(2, "08:00", "12:00");
     	
     	Cours cours1 = new Cours(sessionHiver, sessionHiver, examDate, examDate, "ift1025", 3);
     	repertoireCoursDispo.add(cours1);
@@ -48,14 +49,15 @@ public class Tp1 {
         		"1. Visualiser tous les cours et/ou modifier un cours existant\n" +
         		"2. Creer un emploi du temps personnalisé\n" + 
         		"3. Créer un nouveau cours pour le repertoire de cours\n" + 
+        		"4. Consulter/modifier emploi du temps\n" + 
         		"0. Quitter";
         
-        System.out.println(menuMain);
+//        System.out.println(menuMain);
         
         boolean continuer = true;
 
         while (continuer) {
-        	
+        	System.out.println(menuMain);
             System.out.print("Choisissez une option (ou faites le 0 pour quitter) : ");
             String option = scanner.nextLine();
 
@@ -63,23 +65,22 @@ public class Tp1 {
                 case "1":
                     System.out.println("Modifier un cours dans le repertoire: ");
                     Utils.menuModifierCours(repertoireCoursDispo, scanner); // lancer menu modif
-                    
-                    System.out.println("de retour dans menu MAIN");
-                    System.out.println(menuMain);
                     break;
                 case "2":
-                    System.out.println("Option 2 : "); // emploi du temps personnalisé
-                    
-                    // ... (lancer creation emploi du temps) 
-                    Utils.creerEmploiDuTemps(scanner, repertoireCoursDispo); // TODO pas encore fait
+                    // emploi du temps personnalisé
+                    emploiDuTemps = Utils.creerEmploiDuTemps(scanner, repertoireCoursDispo, emploiDuTemps); 
                     
                     break;
                 case "3":
-                    System.out.println("Option 3 : créer un nouveau cours"); 
+                    System.out.println("créer un nouveau cours"); 
                     Utils.creerNvCours(repertoireCoursDispo, scanner);
-                    System.out.println("de retour dans menu MAIN");
-                    System.out.println(menuMain);
+                    
+                   
                     break;
+                case "4": 
+                	// consulter / modifier emploi du temps
+                	Utils.modifierEmploiDuTemps(scanner, emploiDuTemps);
+                	break;
                 case "0":
                     // Quitter
                     System.out.println("Quitter le programme...");
