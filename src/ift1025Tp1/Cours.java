@@ -1,5 +1,8 @@
 package ift1025Tp1;
 
+import java.time.LocalDate;
+import java.util.TreeSet;
+
 public class Cours implements Comparable<Cours> { // implements Comparable pour être trié dans Set (ordre alphabetique)
 
 	// attributs 
@@ -10,6 +13,37 @@ public class Cours implements Comparable<Cours> { // implements Comparable pour 
 	private String sigle;
 	private int nbCredits;
 
+	
+
+	public boolean conflit(Cours autre) {
+		
+		// conflits possibles: thisTH&autreTH; thisTH&autreTP; thisTP&autreTP; thisTP&autreTH  
+		return (this.horaireTH.conflit(autre.horaireTH) || this.horaireTH.conflit(autre.horaireTP) 
+				|| this.horaireTP.conflit(autre.horaireTP) || this.horaireTP.conflit(horaireTH));
+		
+		// pour debogguage : 
+//		if (this.horaireTH.conflit(autre.horaireTH)) {
+//			 System.out.println("1.conflit this.horaireTH autre horaireTH: " + this.horaireTH + " et " + autre.horaireTH);
+//			 System.out.println("this: " + this.sigle + " autre: " + autre.sigle);
+//			 return true;
+//		} else if(this.horaireTH.conflit(autre.horaireTP)) {
+//			System.out.println("2.conflit this.horaireTH autre horaireTP: " + this.horaireTH + " et " + autre.horaireTP);
+//			System.out.println("this: " + this.sigle + " autre: " + autre.sigle);
+//			return true;
+//		} else if (this.horaireTP.conflit(autre.horaireTP)) {
+//			System.out.println("3.conflit this.horaireTP autre horaireTP: " + this.horaireTP + " et " + autre.horaireTP);
+//			System.out.println("this: " + this.sigle + " autre: " + autre.sigle);
+//			return true;
+//		} else if (this.horaireTP.conflit(autre.horaireTH)) {
+//			System.out.println("4. conflit this.horaireTP autre horaireTH: " + this.horaireTP + " et " + autre.horaireTH);
+//			System.out.println("this: " + this.sigle + " autre: " + autre.sigle);
+//			return true;
+//		}
+//		
+//
+//		return false;
+	}
+	
 
 	/**
 	 *  eg. horaire TH du type  “HoraireSession” (comporte une certaine date 
@@ -101,20 +135,22 @@ public class Cours implements Comparable<Cours> { // implements Comparable pour 
 		this.sigle = sigle.toUpperCase();
 	}
 	
-	public boolean conflit(Cours autre) {
-		// TODO implementer
-		// if 
-		return false;
-	}
 
-
-	@Override
-	public String toString() {
-		return "Cours: " + sigle + (horaireTH != null ? "\n1. cours TH:" + horaireTH + ", " : "pas de TH")
+	public String toStringAvecNumero() {
+		return "Cours: " + sigle + (horaireTH != null ? "\n1. cours TH: " + horaireTH + ", " : "pas de TH")
 				+ (horaireTP != null ? "\n2. cours TP:" + horaireTP + ", " : "pas de TP")
 				+ (examI != null ? "\n3. Examen Intra: " + examI + ", " : "(pas d'examen Intra)") + 
 				(examF != null ? "\n4. Examen Final: " + examF + ", " : "(pas d'examen final)")
-				+ (sigle != null ? "\n5. Sigle:" + sigle + ", " : "") + "\n6. Nb credits=" + nbCredits + "\n\n";
+				+ (sigle != null ? "\n5. Sigle:" + sigle + ", " : "") + "\n6. Nb credits=" + nbCredits;
+	}
+
+	@Override
+	public String toString() {
+		return "Cours: " + sigle + (horaireTH != null ? "\n- cours TH: " + horaireTH + ", " : "pas de TH")
+				+ (horaireTP != null ? "\n- cours TP: " + horaireTP + ", " : "pas de TP")
+				+ (examI != null ? "\n- Examen Intra: " + examI + ", " : "(pas d'examen Intra)") + 
+				(examF != null ? "\n- Examen Final: " + examF + ", " : "(pas d'examen final)")
+				+ (sigle != null ? "\n- Sigle:" + sigle + ", " : "") + "\n- Nb credits=" + nbCredits + "\n\n";
 	}
 	
 

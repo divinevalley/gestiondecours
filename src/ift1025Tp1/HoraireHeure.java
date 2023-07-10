@@ -56,10 +56,14 @@ public class HoraireHeure {
 	}
 
 	public boolean conflit(HoraireHeure autre) {
-		if (this.heureFin.isAfter(autre.heureDebut) && this.heureDebut.isBefore(autre.heureFin)) {
-			return true;
-		} 
-		return false;
+		return (this.heureFin.isAfter(autre.heureDebut) && this.heureDebut.isBefore(autre.heureFin));
+		
+//		if (this.heureFin.isAfter(autre.heureDebut) && this.heureDebut.isBefore(autre.heureFin)) {
+//			System.out.println("thisheurefin" + this.heureFin + " is after autreheuredebut:" + autre.heureDebut);
+//			System.out.println("ou " + this.heureDebut + " is before autreheurefin: " + autre.heureFin);
+//			return true;
+//		} 
+//		return false;
 	}
 	
 	@Override

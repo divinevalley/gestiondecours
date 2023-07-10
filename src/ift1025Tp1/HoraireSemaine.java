@@ -8,7 +8,7 @@ public class HoraireSemaine {
 	private int jourDeLaSemaine;
 	private HoraireHeure horaireHeure;
 
-	//(eg. jourDeLaSemaine = lundi, horaireHeure = comporte heureDébut/Fin)
+	//(eg. jourDeLaSemaine = 1 pour lundi, horaireHeure = comporte heureDébut/Fin)
 	// lun mar mer jeu ven (pas sam dim)
 
 
@@ -43,10 +43,9 @@ public class HoraireSemaine {
 
 
 	public boolean conflit(HoraireSemaine autre) {
-		if (this.jourDeLaSemaine == autre.jourDeLaSemaine) { // if meme jour	
-			if (this.horaireHeure.conflit(autre.horaireHeure)){ // et if conflit
-				return true;
-			}
+		if (this.jourDeLaSemaine == autre.jourDeLaSemaine) { // seulement si meme jour	
+//			System.out.println("this.jour " + this.jourDeLaSemaine + " == " + autre.jourDeLaSemaine); // TODO remove
+			return (this.horaireHeure.conflit(autre.horaireHeure));
 		}
 		return false;
 	}
@@ -63,7 +62,6 @@ public class HoraireSemaine {
 		case 2:
 			jourSemaineString = "mardi";
 			break;
-
 		case 3:
 			jourSemaineString = "mercredi";
 			break;
@@ -85,7 +83,7 @@ public class HoraireSemaine {
 
 
 		return jourSemaineString + ", " 
-		+ (horaireHeure != null ? horaireHeure : "(horaire (heures) non saisis)");
+		+ (horaireHeure != null ? horaireHeure : "(horaire (heures) non renseigné)");
 	}
 
 

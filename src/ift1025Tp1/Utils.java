@@ -7,18 +7,19 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.TreeSet;
 
+import ift1025Tp1.EmploiDuTemps.CoursDejaAjouteException;
 import ift1025Tp1.EmploiDuTemps.ValidationException;
 
 public class Utils {
 	// pour github commands: C:\Users\Deanna\Documents\UdeM\IFT1025 programmation 2\devoirs notés TP\tp1\Tp1\src\ift1025Tp1>
-	
-	
+
+
 	// TODO 
 	// verifier horaire coherent (pas 09:00 - 08:00)
 	// verifier si conflit horaire au sein d'un meme cours
 	// proposer modification d'une seule partie plutôt que parcourir tout le menu
 	// permettre de skip la partie TP, si pas de TP, pas d'examen intra, etc 
-	// ne pas numeroter les infos dans cours tostring 
+
 
 	public static void menuModifierCours(TreeSet<Cours> repertoireCours, Scanner scanner) {
 		boolean continuer = true;
@@ -28,7 +29,7 @@ public class Utils {
 			System.out.println(coursToStringNumerote(repertoireCours));
 			String optionsMenuAAfficher = "\nSaisir le numero correspondant au cours que vous souhaitez modifier."
 					+ " \n(ou faites le 0 pour quitter)"
-					+ "\n\n cours a modifier=> ";
+					+ "\n\n cours a modifier: ";
 			System.out.println(optionsMenuAAfficher);
 
 			// recevoir input
@@ -37,46 +38,46 @@ public class Utils {
 			try {
 				// retrouver notre objet Cours a modifier
 				Cours coursAModifier = permettreSelectionCours(repertoireCours, input);
-				
+
 				if (coursAModifier == null) { // cours va etre null si input = 0 (l'utilisateur veut quitter)
 					continuer = false;
 					break;
 				}
-				
+
 				// lancer les menus modifier cours
 				modifierCours(coursAModifier, repertoireCours, scanner); 
-				
+
 				// de retour dans menu 
-				System.out.println(optionsMenuAAfficher);
+//				System.out.println(optionsMenuAAfficher);
 			} catch (IndexOutOfBoundsException e) {
 				System.out.println("Option invalide. Ce cours n'existe pas. Veuillez choisir une option valide.");
 			} catch (NumberFormatException e) {
 				System.out.println("Invalide. Veuillez saisir un choix (numéro)");
 			}
-			
+
 		}
 	}
 
 	// afficher les cours en ARRAY numéroté, retourner Cours sélectionné
 	private static Cours permettreSelectionCours(TreeSet<Cours> repertoireCours, String selection) throws IndexOutOfBoundsException, NumberFormatException {
-		
+
 		int inputInt = Integer.parseInt(selection); // convertir en int
-		
+
 		//afficher repertoire cours
 		Cours[] arrayCours = repertoireCours.toArray(new Cours[repertoireCours.size()]);
 		System.out.println(coursToStringNumerote(repertoireCours)); 
-		
+
 		if (inputInt==0) { // utiliser met 0 si veut quitter, fonction va renvoyer null pour signaler qu'il veut quitter 
 			return null;
 		}
-		
-		if (inputInt >= arrayCours.length || inputInt < 0) {
+
+		if (inputInt > arrayCours.length || inputInt < 0) {
 			throw new IndexOutOfBoundsException();
 		}
-		
+
 		return arrayCours[inputInt-1];  // -1 pour avoir numerotation depuis  0 
 	}
-	
+
 	// transformer repertoire en string pour pouvoir afficher avec numerotation  
 	private static String coursToStringNumerote(TreeSet<Cours> repertoireCours) {
 		int numero = 1; //commencer a 1
@@ -92,62 +93,75 @@ public class Utils {
 
 	// une fois un certain Cours est choisi, proposer un menu d'options de modifications
 	public static void modifierCours(Cours coursAModifier, TreeSet<Cours> repertoireCours, Scanner scanner) {
-		// coursAModifier : 
-		/* eg. "Cours 
-		1. horaireTH=" + horaireTH + ", 
-		2. horaireTP=" + horaireTP + ", 
-		3. examI=" + examI + ", 
-		4. examF=" + examF
-		5. nbCredits=" + nbCredits */
+		
+//		Cours: IFT3090
+//		1. cours TH: Dates : 2023-01-01 - 2023-05-05	[vendredi, 20:00-21:00.], 
+//		2. cours TP:Dates : 2023-01-01 - 2023-05-05	[vendredi, 20:00-21:00.], 
+//		3. Examen Intra: Dates : 2023-03-15 - 2023-03-15	[], 
+//		4. Examen Final: Dates : 2023-05-15 - 2023-05-15	[mardi, 19:00-20:00.], 
+//		5. Sigle:IFT3090, 
+//		6. Nb credits=3
+//		7. supprimer ce cours du repertoire
+		
+		String menuAAfficher =  "\n------Vous êtes maintenant sur le cours : ------\n\n" + coursAModifier.toStringAvecNumero();  
+		String menuAppend = "\n7. supprimer ce cours du repertoire" + 
+				"\n\nVeuillez choisir le numero correspondant au parametre que vous souhaitez modifier" + 
+				"\n(ou faites le 0 pour quitter ce menu et retourner en arriere) : ";
+		menuAAfficher += menuAppend;
 
 		boolean continuer = true;
+		boolean coursSupprimer = false;
 		while(continuer) {
-			System.out.println("Vous êtes maintenant sur le cours :");
-			String menuAAfficher = coursAModifier + "\n7. supprimer ce cours du repertoire" + 
-					"\nVeuillez choisir le numero correspondant au parametre que vous souhaitez modifier" + 
-					"\n(ou faites le 0 pour quitter ce menu et retourner en arriere) : ";  
+			
 			System.out.println(menuAAfficher);
-			String option = scanner.nextLine().trim();
+			String option = coursSupprimer ? "0" :  scanner.nextLine().trim(); // si cours supprimé, on va dire "0" automatiquement pour signaler quitter 
 
 			switch (option) {
 
 			case "0":
 				// Quitter
-				System.out.println("Option 0 : Quitter");
 				continuer = false;
 				break;
 			case "1": //horaireTH
 				HoraireSession nvHoraireSessionTH = inputHoraireSession("Pour modifier le cours THEORIQUE (TH) : ",scanner, false);
 				coursAModifier.setHoraireTH(nvHoraireSessionTH);
+				menuAAfficher = coursAModifier.toStringAvecNumero() + menuAppend;  // mettre a jour cours a afficher (pour afficher les bonnes info a jour)  
 				break;
 			case "2": //horaireTP
 				HoraireSession nvHoraireSessionTP = inputHoraireSession("Pour modifier le cours PRATIQUE (TP) : ",scanner, false);
 				coursAModifier.setHoraireTP(nvHoraireSessionTP);
+				menuAAfficher = coursAModifier.toStringAvecNumero() + menuAppend;  // maj cours a afficher
 				break;
 			case "3": //exam I
 				HoraireSession nvHoraireSessionExamI = inputHoraireSession("nouvel horaire pour examen INTRA", scanner, true);
 				coursAModifier.setExamI(nvHoraireSessionExamI);
+				menuAAfficher = coursAModifier.toStringAvecNumero() + menuAppend;  // maj cours a afficher
 				break;
 			case "4": //exam F
 				HoraireSession nvHoraireSessionExamF = inputHoraireSession("nouvel horaire pour examen FINAL", scanner, true);
 				coursAModifier.setExamF(nvHoraireSessionExamF);
+				menuAAfficher = coursAModifier.toStringAvecNumero() + menuAppend;  // maj cours a afficher
 				break;
 			case "5": //sigle
 				System.out.println("nouveau sigle: ");
 				String sigleInput= scanner.nextLine();
 				coursAModifier.setSigle(sigleInput);
 				System.out.println("sigle modifié à : " + sigleInput);
+				menuAAfficher = coursAModifier.toStringAvecNumero() + menuAppend;   // maj cours a afficher
 				break;
 			case "6": //nbcredits
 				System.out.println("nouveau nombre de credits: ");
 				int nvNbCredits = Integer.parseInt(scanner.nextLine());
 				coursAModifier.setNbCredits(nvNbCredits);
 				System.out.println("Nombre de crédits maintenant : " + nvNbCredits);
+				menuAAfficher = coursAModifier.toStringAvecNumero() + menuAppend;   // maj cours a afficher
 				break;
 			case "7": //supprimer
 				supprimerCours(coursAModifier, repertoireCours);
-				// de retour dans menu
-				System.out.println("de retour dans menu modification de cours : ");
+				
+				// une fois supprimé on ne va pas retourner sur le cours, donc on va signaler de quitter
+				coursSupprimer = true;
+				menuAAfficher = "";
 				break;
 			default:
 				System.out.println("Option invalide. Veuillez choisir une option valide.");
@@ -158,7 +172,7 @@ public class Utils {
 
 	public static void supprimerCours(Cours coursASupprimer, TreeSet<Cours> repertoireCours) {
 		repertoireCours.remove(coursASupprimer);
-		System.out.println("Le cours a été supprimé.");
+		System.out.println("Le cours " + coursASupprimer.getSigle() + " a été supprimé.");
 	}
 
 	public static void creerNvCours(TreeSet<Cours> repertoireCours, Scanner scanner) {
@@ -182,14 +196,14 @@ public class Utils {
 		repertoireCours.add(nvCours);  
 
 		System.out.println("Le cours a été créé avec succès : ");
-		
+
 		System.out.println(nvCours.toString());
 	}
 
 	private static Cours instancierCoursSigle(Scanner scanner, TreeSet<Cours> repertoire) {
 		boolean continuer = true;
 		Cours nvCours = new Cours();
-		
+
 		while (continuer) {
 			// demander sigle
 			System.out.print("Entrez le sigle du cours : ");
@@ -203,7 +217,7 @@ public class Utils {
 				continuer = false; // => c'est bon, sortir
 			}
 		}
-		
+
 		continuer = true;
 		while(continuer) {
 			// demander nb de credits
@@ -218,7 +232,7 @@ public class Utils {
 		}	
 		return nvCours;
 	}
-	
+
 
 	private static boolean sigleExisteDeja(String sigle, TreeSet<Cours> repertoire) {
 		boolean existe = false;
@@ -273,12 +287,12 @@ public class Utils {
 					continuer = false; // => c'est bon. sortir boucle
 				} catch (DateTimeParseException e) {
 					System.out.println("mauvais format, reessayer:");
-//					continue; // recommencer boucle depuis debut
+					//					continue; // recommencer boucle depuis debut
 				} 
 
 
 			} 
-			
+
 			// prendre input emploi du temps hebdomadaire
 			HashSet<HoraireSemaine> horaireSemaine = inputHoraireSemaine(scanner, estExam, horaireSession.getDateFin()); // eg. les lundis, 08:00 - 10:00
 			horaireSession.setHoraireSemaine(horaireSemaine);
@@ -290,27 +304,27 @@ public class Utils {
 	public static HashSet<HoraireSemaine> inputHoraireSemaine(Scanner scanner, boolean estExam, LocalDate dateDebut) {
 		HashSet<HoraireSemaine> setAvecHorairesSemaines = new HashSet<>();
 		boolean continuer = true;
-		
+
 		while (continuer) {
 			String inputJour = "";
-			
+
 			// demander jour seulement si ce n'est pas un examen
 			if (!estExam) {
 				System.out.println("Préciser l'horaire : \nSaisir le numero correspondant au jour de la semaine : \n"
-					+ "1 - lundi, \n"
-					+ "2 - mardi, \n"
-					+ "3 - mercredi, \n"
-					+ "4 - jeudi, \n"
-					+ "5 - vendredi\n"
-					+ "(Si vous avez terminé de saisir l'horaire hebdomadaire, saisir 0) :");
+						+ "1 - lundi, \n"
+						+ "2 - mardi, \n"
+						+ "3 - mercredi, \n"
+						+ "4 - jeudi, \n"
+						+ "5 - vendredi\n"
+						+ "(Si vous avez terminé de saisir l'horaire hebdomadaire, saisir 0) :");
 
-			// prendre input pour le jour
-			inputJour = scanner.nextLine(); // eg. "1" pour lundi
+				// prendre input pour le jour
+				inputJour = scanner.nextLine(); // eg. "1" pour lundi
 			} else {
 				// si c'est exam, on calcule quel jour c'est selon la date de facon automatique
 				inputJour = dateDebut.getDayOfWeek().getValue()  + "";
 			}
-			
+
 			if (inputJour.equals("0")) { // 0 pour terminer
 				continuer = false;
 			} else {
@@ -325,7 +339,7 @@ public class Utils {
 					setAvecHorairesSemaines.add(horaireSemaine);
 
 					System.out.println("horaire semaine : " + setAvecHorairesSemaines);
-					
+
 					if (estExam) { // si exam, pas besoin de demander si ça prend lieu d'autres jours de la semaine. on s'arrete là.
 						break;
 					}
@@ -384,14 +398,14 @@ public class Utils {
 		}
 		return horaireHeure;
 	}
-	
-	
+
+
 	// afficher le repértoire des cours, instancier un objet EmploiDuTemps à partir du input de l'utilisateur
 	public static EmploiDuTemps creerEmploiDuTemps(Scanner scanner, TreeSet<Cours> repertoireCours, EmploiDuTemps emploiDuTemps) {
-		
+
 		// tout d'abord, créer un emploi du temps vide
 		System.out.println("\n----------Menu Création d'emploi du temps--------");
-		
+
 		boolean continuer = true;
 		while(continuer) {
 			// demander nb de credits
@@ -404,68 +418,77 @@ public class Utils {
 				System.out.println("Invalide! Reessayer");
 			}
 		}
-				
+
 		continuer = true;
+		String msgErreur = "\n";
+		
+		//tout d'abord afficher repertoire pour premiere fois
+		System.out.println(coursToStringNumerote(repertoireCours));
 		while(continuer) {
-			//afficher repertoire
-			System.out.println(coursToStringNumerote(repertoireCours));
 			
 			// afficher emploi du temps actuel
-			System.out.println("Votre emploi du temps actuel: ");
+			System.out.println("\n=======Votre emploi du temps actuel:=======");
 			System.out.println(emploiDuTemps.toString());
-			System.out.println("\n\nVeuillez sélectionner le numéro du cours que vous souhaitez ajouter (eg. \"1\") \n ou faites le 0 pour terminer");
-			
+
+			System.out.println(msgErreur);
+			System.out.println("\n\nVeuillez sélectionner le numéro du cours que vous souhaitez ajouter (eg. \"1\") \n(ou faites le 0 pour terminer):");
+
 			Cours coursSelectionne  = new Cours();
 			String inputNumeroCours = scanner.nextLine();
-			
+
 			if (inputNumeroCours.equals("0")) {
 				continuer = false;
 				System.out.println("Merci. Voici votre emploi du temps:\n");
 				System.out.println(emploiDuTemps.toString());
 				break;
 			}
-			
+
 			try {
-				coursSelectionne = permettreSelectionCours(repertoireCours, inputNumeroCours); // retrouver l'objet Cours choisi
+				coursSelectionne = permettreSelectionCours(repertoireCours, inputNumeroCours); // re-afficher rep cours, retrouver l'objet Cours choisi
 				System.out.println("Vous avez choisi : " + coursSelectionne.getSigle());
 			} catch (NumberFormatException e) {
-				System.out.println("Choix de cours invalide. Reessayer:");
+				msgErreur = "Choix de cours invalide. Reessayer:";
 				continue; // recommencer boucle
 			} catch(IndexOutOfBoundsException e) {
-				System.out.println("Ce cours n'existe pas. Ressayer:");
+				msgErreur = "Ce cours n'existe pas. Ressayer:";
+				e.printStackTrace();
 				continue; // recommencer boucle 
 			}
-	
+
 			// seulement si tout va bien, on ajoute le cours 
 			try {
 				emploiDuTemps.ajouterCours(coursSelectionne);
+				msgErreur = ""; // vider msg erreur pour ne rien afficher la prochaine boucle 
 			} catch (ValidationException e) {
-				System.out.println("Conflit horaire! Le cours n'a pas été ajouté.");
+				msgErreur =  "Conflit horaire! (ou depasse max nb de credits!) Le cours n'a pas été ajouté.";
+			} catch(CoursDejaAjouteException e) {
+				msgErreur = "Ce cours est deja dans votre emploi du temps!";
 			} catch(Exception e) {
-				e.printStackTrace();
+				e.printStackTrace(); //TODO remove
 			}
-			
+
 		}
-		
+
 		return emploiDuTemps;
 	}
-	
+
+	//afficher emploi du temps avec numerotation pour suppression
 	public static EmploiDuTemps modifierEmploiDuTemps(Scanner scanner, EmploiDuTemps emploiDuTemps) {
-		
+
 		//afficher emploi du temps avec numerotation
 		ArrayList<Cours> listCours = afficherEmploiDuTempsNumerote(emploiDuTemps);
-		
+
 		boolean continuer = true;
 
 		while(continuer) {
-			System.out.println("sélectionner le numéro du cours à supprimer \n(ou faites le 0 pour quitter/terminer) ");
+			System.out.println("Sélectionner le numéro du cours à supprimer \n(ou faites le 0 pour quitter/terminer) ");
 			String input = scanner.nextLine();
-			
+
 			if (input.equals("0")) {
 				continuer = false;
 				break;
 			}
-			
+
 			try {
 				int inputInt = Integer.parseInt(input);
 				Cours coursSelectionner = listCours.get(inputInt-1); // -1 pour ajuster index
@@ -477,19 +500,28 @@ public class Utils {
 				System.out.println("cours n'existe pas! reesayer:");
 			}
 		}
-		
+
 		return emploiDuTemps;
 	}
-	
+
 	private static ArrayList<Cours> afficherEmploiDuTempsNumerote(EmploiDuTemps emploiDuTemps){
-		int i = 1; //commencer numerotation a 1
-		ArrayList<Cours> listCours = emploiDuTemps.getListeCours();
-		for(Cours cours : listCours) {
-			System.out.println(">>>(" + i + ")<<<");
-			System.out.println(cours.toString());
-			i++;
+		System.out.println("\n===========EMPLOI DU TEMPS============");
+
+		if (emploiDuTemps.getListeCours()==null) { //checker si vide
+			System.out.println("emploi du temps vide");
+		} else {
+			int i = 1; //commencer numerotation a 1
+			ArrayList<Cours> listCours = emploiDuTemps.getListeCours(); // afficher tous les cours dans emploi du temps
+			for(Cours cours : listCours) {
+				System.out.println(">>>(" + i + ")<<<");
+				System.out.println(cours.toString());
+				i++;
+			}
+			
+			return listCours;
 		}
-		
-		return listCours;
+
+		System.out.println(emploiDuTemps.afficherCredits()); // eg. 12 credits (max 18 credits)
+		return new ArrayList<Cours>();
 	}
 }

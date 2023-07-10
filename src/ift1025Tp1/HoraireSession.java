@@ -62,12 +62,19 @@ public class HoraireSession {
 	}
 	
 	public boolean conflit(HoraireSession autre) {
-		// d'abord checker si overlap entre dates
+		// d'abord checker si overlap entre dates session (càd les deux sont de la meme session)
 		if (autre.dateDebut.isBefore(this.dateFin) && this.dateFin.isAfter(autre.dateDebut)) {
-			// checker si conflit jour 
-			for (HoraireSemaine horaire : this.horaireSemaine) {
+			// checker si conflit jour (càd partage le meme jour de la semaine)
+			for (HoraireSemaine thisHoraire : this.horaireSemaine) {
+//				System.out.println("1. for : " + this.horaireSemaine);
 				for (HoraireSemaine autreHoraire: autre.horaireSemaine) {
-					return horaire.conflit(autreHoraire);					
+//					System.out.println("2. for: " + autre.horaireSemaine);
+//					System.out.println("on compare this horaire semaine: " + thisHoraire + " avec autrehoraire: " + autre.horaireSemaine);
+					
+//					if (thisHoraire.conflit(autreHoraire)) {
+//						System.out.println("TRUE! horaire conflit! this: " +  this.horaireSemaine + " avec " + autre.horaireSemaine);
+//					}
+					return thisHoraire.conflit(autreHoraire);					
 				}
 			}
 		}

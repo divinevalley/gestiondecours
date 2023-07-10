@@ -1,6 +1,8 @@
 package ift1025Tp1;
 import java.util.ArrayList;
 
+
+
 public class EmploiDuTemps {
 	//attributs : 
 	private ArrayList<Cours> listeCours;
@@ -15,9 +17,15 @@ public class EmploiDuTemps {
 		public ValidationException() {
 			super();
 		}
+
+
 	}
 
-
+	public class CoursDejaAjouteException extends Exception {
+		public CoursDejaAjouteException() {
+			super();
+		}
+	}
 
 	// constructeur : 
 	public EmploiDuTemps(int nbCreditMax) {
@@ -58,17 +66,17 @@ public class EmploiDuTemps {
 	}
 
 	//fonctions : 
-	public void ajouterCours (Cours cours) throws ValidationException {
-		if (!listeCours.contains(cours)) {
+	public void ajouterCours (Cours cours) throws ValidationException, CoursDejaAjouteException {
+		if (listeCours.contains(cours)) { // si deja ajoute
+			throw new CoursDejaAjouteException();
+		} else {
 			if (calculerConflit(cours) || depasseMax(cours)) { // si conflit existe OU depasse max 
-				throw new ValidationException("conflit horaire"); 
-			} else { // ok pour ajouter
+				throw new ValidationException(); 
+			} else { // sinon, ok pour ajouter
 				listeCours.add(cours);
 				nbCreditsTotal+= cours.getNbCredits();
 			}
-		} else {
-			System.out.println("cours existe deja dans emploi du temps!");
-		}
+		} 
 
 
 	}
@@ -88,7 +96,7 @@ public class EmploiDuTemps {
 		}
 
 		for (Cours coursDejaInscrit : this.listeCours) { // parcourir tous les cours deja dans emploi du temps
-			if(coursDejaInscrit.conflit(cours)) { // TODO <- fonction pas encore implementee
+			if(coursDejaInscrit.conflit(cours)) { 
 				return true;
 			}
 		}
@@ -111,6 +119,10 @@ public class EmploiDuTemps {
 	//				+ nbCreditMax + ", nbCreditsTotal=" + nbCreditsTotal + "]";
 	//	}
 	//	
+	
+	public String afficherCredits() {
+		return "\nNombre de credits: " + nbCreditsTotal + " (max: " + nbCreditMax + " credits)";
+	}
 
 	//afficher horaire 
 	@Override
