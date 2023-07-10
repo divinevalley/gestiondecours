@@ -9,7 +9,7 @@ public class HoraireSession {
 	//attributs:
 	private LocalDate dateDebut;
 	private LocalDate dateFin;
-	private HashSet<HoraireSemaine> horaireSemaine;
+	private HashSet<HoraireSemaine> horaireSemaine; // va pas accepter de doublons
 	
 	//	(eg. dateDebut=2023/01/05, dateFin=2023/04/30, [horaireSemaine lundi avec heureDéb/fin, 
 	// mercredi avec heure Déb/Fin])

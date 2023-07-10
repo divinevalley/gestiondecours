@@ -37,7 +37,7 @@ public class Utils {
 
 			try {
 				// retrouver notre objet Cours a modifier
-				Cours coursAModifier = permettreSelectionCours(repertoireCours, input);
+				Cours coursAModifier = afficherEtSelectionnerCours(repertoireCours, input);
 
 				if (coursAModifier == null) { // cours va etre null si input = 0 (l'utilisateur veut quitter)
 					continuer = false;
@@ -59,7 +59,7 @@ public class Utils {
 	}
 
 	// afficher les cours en ARRAY numéroté, retourner Cours sélectionné
-	private static Cours permettreSelectionCours(TreeSet<Cours> repertoireCours, String selection) throws IndexOutOfBoundsException, NumberFormatException {
+	private static Cours afficherEtSelectionnerCours(TreeSet<Cours> repertoireCours, String selection) throws IndexOutOfBoundsException, NumberFormatException {
 
 		int inputInt = Integer.parseInt(selection); // convertir en int
 
@@ -123,12 +123,12 @@ public class Utils {
 				continuer = false;
 				break;
 			case "1": //horaireTH
-				HoraireSession nvHoraireSessionTH = inputHoraireSession("Pour modifier le cours THEORIQUE (TH) : ",scanner, false);
+				HoraireSession nvHoraireSessionTH = inputHoraireSession("Pour modifier le cours THEORIQUE (TH), ", scanner, false);
 				coursAModifier.setHoraireTH(nvHoraireSessionTH);
 				menuAAfficher = coursAModifier.toStringAvecNumero() + menuAppend;  // mettre a jour cours a afficher (pour afficher les bonnes info a jour)  
 				break;
 			case "2": //horaireTP
-				HoraireSession nvHoraireSessionTP = inputHoraireSession("Pour modifier le cours PRATIQUE (TP) : ",scanner, false);
+				HoraireSession nvHoraireSessionTP = inputHoraireSession("Pour modifier le cours PRATIQUE (TP), ", scanner, false);
 				coursAModifier.setHoraireTP(nvHoraireSessionTP);
 				menuAAfficher = coursAModifier.toStringAvecNumero() + menuAppend;  // maj cours a afficher
 				break;
@@ -180,16 +180,16 @@ public class Utils {
 		Cours nvCours = instancierCoursSigle(scanner, repertoireCours);
 
 		// Demander d'autres informations sur le cours (horaires, etc.) 
-		HoraireSession horaireSessionTH = inputHoraireSession("Veuillez saisir pour le cours THEORIQUE (TH) :", scanner, false);
+		HoraireSession horaireSessionTH = inputHoraireSession("Veuillez saisir pour le cours THEORIQUE (TH), ", scanner, false);
 		nvCours.setHoraireTH(horaireSessionTH);
 
-		HoraireSession horaireSessionTP = inputHoraireSession("Veuillez saisir pour le cours PRATIQUE (TP) :", scanner, false);
+		HoraireSession horaireSessionTP = inputHoraireSession("Veuillez saisir pour le cours PRATIQUE (TP), ", scanner, false);
 		nvCours.setHoraireTP(horaireSessionTP);
 
-		HoraireSession horaireSessionExamI = inputHoraireSession("pour l'examen INTRA : ", scanner, true); 
+		HoraireSession horaireSessionExamI = inputHoraireSession("pour l'examen INTRA, ", scanner, true); 
 		nvCours.setExamI(horaireSessionExamI);
 
-		HoraireSession horaireSessionExamF = inputHoraireSession("pour l'examen FINAL : ", scanner, true);
+		HoraireSession horaireSessionExamF = inputHoraireSession("pour l'examen FINAL, ", scanner, true);
 		nvCours.setExamF(horaireSessionExamF);
 
 		// Ajouter le cours à la liste (repertoire)
@@ -249,7 +249,9 @@ public class Utils {
 		boolean continuer = true;
 		HoraireSession horaireSession = new HoraireSession();
 
-		String msg = estExam ? typeDeCours + " date d'examen (format requis: aaaa-mm-jj) : " : typeDeCours + " la date de DEBUT (format requis: aaaa-mm-jj) : "; 
+		String msg = estExam ? typeDeCours + " date d'examen (format requis: aaaa-mm-jj) : " : 
+			typeDeCours + " la date de DEBUT (format requis: aaaa-mm-jj) : "
+					+ "\n (OU faites la touche entrée pour ne rien renseigner)"; 
 
 		while(continuer) {
 			// tout d'abord, pour la date de DEBUT
@@ -257,7 +259,9 @@ public class Utils {
 				// prendre les Strings pour instancier 
 				System.out.println(msg);
 				String dateDebut = scanner.nextLine(); // eg. 2023-01-01
-
+				if (dateDebut.equals("")) { // si utilisateur n'a rien renseigner, on va sauter cette partie
+					return null;
+				}
 				// set attribut
 				horaireSession.setDateDebut(dateDebut); 
 
@@ -268,10 +272,8 @@ public class Utils {
 				}
 
 			} catch (DateTimeParseException e) {
-				System.out.println("mauvais format pour date, reessayer:");
-
-				continue;
-				// boucle continue 
+				System.out.println("Mauvais format pour date, reessayer:");
+				continue; // reprend depuis debut boucle
 			}
 
 			// ensuite pour la date de FIN mais seulement si ce n'est pas un examen 
@@ -283,16 +285,11 @@ public class Utils {
 
 					// set attribut 
 					horaireSession.setDateFin(dateFin);
-
 					continuer = false; // => c'est bon. sortir boucle
 				} catch (DateTimeParseException e) {
-					System.out.println("mauvais format, reessayer:");
-					//					continue; // recommencer boucle depuis debut
+					System.out.println("Mauvais format, reessayer:");
 				} 
-
-
 			} 
-
 			// prendre input emploi du temps hebdomadaire
 			HashSet<HoraireSemaine> horaireSemaine = inputHoraireSemaine(scanner, estExam, horaireSession.getDateFin()); // eg. les lundis, 08:00 - 10:00
 			horaireSession.setHoraireSemaine(horaireSemaine);
@@ -332,7 +329,7 @@ public class Utils {
 					// prendre input pour les horaires pour ce jour, ajouter au Set 
 					int inputJourInt = Integer.parseInt(inputJour); // NumberFormatException possible
 					HoraireSemaine horaireSemaine = new HoraireSemaine(inputJourInt); // eg. "1" pour lundi // InputMismatchException possible
-					HoraireHeure horaireHeure = inputHoraireHeure(inputJour, scanner); // eg. 08:00 debut, 10:00 fin  // DateTimeParse Exception possible
+					HoraireHeure horaireHeure = prendreInputHoraireHeure(horaireSemaine.jourSemaineEnString(), scanner); // eg. 08:00 debut, 10:00 fin  // DateTimeParse Exception possible
 					horaireSemaine.setHoraireHeure(horaireHeure);					
 
 					// ajouter au Set 
@@ -351,7 +348,7 @@ public class Utils {
 					System.out.println("invalide. format requis: hh:mm");
 
 				} catch (InputMismatchException e) {
-					System.out.println("invalide. doit etre entre 1-5 : \n1- lun, 2- mar, 3- mer, 4- jeu, 5- ven : "); 
+					System.out.println("invalide. doit etre entre 1-7 : \n1- lun, 2- mar, 3- mer, 4- jeu, 5- ven, 6- sam, 7- dim: "); 
 
 				} catch(NumberFormatException e) {  
 					System.out.println("invalide. reessayer ");
@@ -363,11 +360,11 @@ public class Utils {
 	}
 
 
-	public static HoraireHeure inputHoraireHeure(String msgPrecisionCours, Scanner scanner) {
+	public static HoraireHeure prendreInputHoraireHeure(String msgPrecisionCours, Scanner scanner) {
 		boolean continuer = true;
 		HoraireHeure horaireHeure = new HoraireHeure();
 		String heureDebut = "";
-		String msgInvalide = "Invalide. Format requis hh:mm (24H), (eg. 08:30 et non pas 8:30).";
+		String msgFormatInvalide = "Invalide. Format requis hh:mm (24H), (eg. 08:30 et non pas 8:30).";
 
 		while(continuer) {
 			try {
@@ -379,7 +376,7 @@ public class Utils {
 				horaireHeure.setHeureDebut(heureDebut);
 				continuer = false; // sortir boucle
 			} catch (DateTimeParseException e) {
-				System.out.println(msgInvalide);
+				System.out.println(msgFormatInvalide);
 				continue;
 			}
 		}
@@ -393,7 +390,9 @@ public class Utils {
 				horaireHeure.setHeureFin(heureFin);
 				continuer = false; // => c'est bon, sortir boucle
 			} catch (DateTimeParseException e) {
-				System.out.println(msgInvalide);
+				System.out.println(msgFormatInvalide);
+			} catch (InputMismatchException e) {
+				System.out.println("Erreur: Heure de fin est avant heure de debut.");
 			}
 		}
 		return horaireHeure;
@@ -401,7 +400,7 @@ public class Utils {
 
 
 	// afficher le repértoire des cours, instancier un objet EmploiDuTemps à partir du input de l'utilisateur
-	public static EmploiDuTemps creerEmploiDuTemps(Scanner scanner, TreeSet<Cours> repertoireCours, EmploiDuTemps emploiDuTemps) {
+	public static EmploiDuTemps prendreInputCreerEmploiDuTemps(Scanner scanner, TreeSet<Cours> repertoireCours, EmploiDuTemps emploiDuTemps) {
 
 		// tout d'abord, créer un emploi du temps vide
 		System.out.println("\n----------Menu Création d'emploi du temps--------");
@@ -444,7 +443,7 @@ public class Utils {
 			}
 
 			try {
-				coursSelectionne = permettreSelectionCours(repertoireCours, inputNumeroCours); // re-afficher rep cours, retrouver l'objet Cours choisi
+				coursSelectionne = afficherEtSelectionnerCours(repertoireCours, inputNumeroCours); // re-afficher rep cours, retrouver l'objet Cours choisi
 				System.out.println("Vous avez choisi : " + coursSelectionne.getSigle());
 			} catch (NumberFormatException e) {
 				msgErreur = "Choix de cours invalide. Reessayer:";
@@ -460,9 +459,11 @@ public class Utils {
 				emploiDuTemps.ajouterCours(coursSelectionne);
 				msgErreur = ""; // vider msg erreur pour ne rien afficher la prochaine boucle 
 			} catch (ValidationException e) {
-				msgErreur =  "Conflit horaire! (ou depasse max nb de credits!) Le cours n'a pas été ajouté.";
+				msgErreur =  "Conflit horaire! Le cours n'a pas été ajouté.";
 			} catch(CoursDejaAjouteException e) {
-				msgErreur = "Ce cours est deja dans votre emploi du temps!";
+				msgErreur = "Ce cours est deja dans votre emploi du temps. Le cours n'a pas été ajouté";
+			} catch (InputMismatchException e) {
+				msgErreur = "Vous ne pouvez pas dépassé le nombre de crédit maximum. Le cours n'a pas été ajouté.";
 			} catch(Exception e) {
 				e.printStackTrace(); //TODO remove
 			}
@@ -506,19 +507,21 @@ public class Utils {
 
 	private static ArrayList<Cours> afficherEmploiDuTempsNumerote(EmploiDuTemps emploiDuTemps){
 		System.out.println("\n===========EMPLOI DU TEMPS============");
-
-		if (emploiDuTemps.getListeCours()==null) { //checker si vide
-			System.out.println("emploi du temps vide");
+		ArrayList<Cours> listeCours = emploiDuTemps.getListeCours();
+		if (listeCours==null) { //checker si vide
+			System.out.println("emploi du temps n'a pas été créé");
+		} else if(listeCours.isEmpty()) {
+			System.out.println("rien n'a été ajouté");
 		} else {
 			int i = 1; //commencer numerotation a 1
-			ArrayList<Cours> listCours = emploiDuTemps.getListeCours(); // afficher tous les cours dans emploi du temps
-			for(Cours cours : listCours) {
+			 // afficher tous les cours dans emploi du temps
+			for(Cours cours : listeCours) {
 				System.out.println(">>>(" + i + ")<<<");
 				System.out.println(cours.toString());
 				i++;
 			}
 			
-			return listCours;
+			return listeCours;
 		}
 
 		System.out.println(emploiDuTemps.afficherCredits()); // eg. 12 credits (max 18 credits)

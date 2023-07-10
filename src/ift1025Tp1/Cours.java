@@ -146,8 +146,8 @@ public class Cours implements Comparable<Cours> { // implements Comparable pour 
 
 	@Override
 	public String toString() {
-		return "Cours: " + sigle + (horaireTH != null ? "\n- cours TH: " + horaireTH + ", " : "pas de TH")
-				+ (horaireTP != null ? "\n- cours TP: " + horaireTP + ", " : "pas de TP")
+		return "Cours: " + sigle + (horaireTH != null ? "\n- cours TH: " + horaireTH + ", " : "\npas de TH")
+				+ (horaireTP != null ? "\n- cours TP: " + horaireTP + ", " : "\npas de TP")
 				+ (examI != null ? "\n- Examen Intra: " + examI + ", " : "(pas d'examen Intra)") + 
 				(examF != null ? "\n- Examen Final: " + examF + ", " : "(pas d'examen final)")
 				+ (sigle != null ? "\n- Sigle:" + sigle + ", " : "") + "\n- Nb credits=" + nbCredits + "\n\n";

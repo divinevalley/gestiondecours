@@ -9,7 +9,6 @@ public class HoraireSemaine {
 	private HoraireHeure horaireHeure;
 
 	//(eg. jourDeLaSemaine = 1 pour lundi, horaireHeure = comporte heureDébut/Fin)
-	// lun mar mer jeu ven (pas sam dim)
 
 
 	// constructeur
@@ -49,10 +48,8 @@ public class HoraireSemaine {
 		}
 		return false;
 	}
-
-	@Override
-	public String toString() {
-
+	
+	public String jourSemaineEnString() {
 		String jourSemaineString = "";
 
 		switch (this.jourDeLaSemaine) {
@@ -80,9 +77,13 @@ public class HoraireSemaine {
 		default:
 			break;
 		}
+		
+		return jourSemaineString;
+	}
 
-
-		return jourSemaineString + ", " 
+	@Override
+	public String toString() {
+		return this.jourSemaineEnString() + ", " 
 		+ (horaireHeure != null ? horaireHeure : "(horaire (heures) non renseigné)");
 	}
 

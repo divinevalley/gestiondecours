@@ -97,7 +97,7 @@ public class Tp1 {
                     break;
                 case "3":
                     // emploi du temps personnalisé
-                    emploiDuTemps = Utils.creerEmploiDuTemps(scanner, repertoireCoursDispo, emploiDuTemps); 
+                    emploiDuTemps = Utils.prendreInputCreerEmploiDuTemps(scanner, repertoireCoursDispo, emploiDuTemps); 
                     break;
                 case "4": 
                 	// modifier (supprimer) emploi du temps
