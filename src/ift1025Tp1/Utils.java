@@ -13,6 +13,7 @@ public class Utils {
 	// pour github commands: C:\Users\Deanna\Documents\UdeM\IFT1025 programmation 2\devoirs notés TP\tp1\Tp1\src\ift1025Tp1>
 
 	/**
+	 * lancer le menu pour l'utilisateur de sélectionner et modifier un cours depuis le repertoire
 	 * @param repertoireCours
 	 * @param scanner
 	 */
@@ -51,11 +52,12 @@ public class Utils {
 		}
 	}
 
-	// afficher les cours en ARRAY numéroté, retourner Cours sélectionné
+
 	/**
+	 * afficher les cours en ARRAY numéroté, retourner Cours sélectionné
 	 * @param repertoireCours
 	 * @param selection
-	 * @return
+	 * @return objet Cours sélectionné 
 	 * @throws IndexOutOfBoundsException
 	 * @throws NumberFormatException
 	 */
@@ -78,10 +80,10 @@ public class Utils {
 		return arrayCours[inputInt-1];  // -1 pour avoir numerotation depuis  0 
 	}
 
-	// transformer repertoire en string pour pouvoir afficher avec numerotation  
 	/**
+	 * transformer repertoire en string pour pouvoir afficher avec numerotation
 	 * @param repertoireCours
-	 * @return
+	 * @return String repertoire avec numérotation
 	 */
 	private static String coursToStringNumerote(TreeSet<Cours> repertoireCours) {
 		int numero = 1; //commencer a 1
@@ -95,8 +97,9 @@ public class Utils {
 		return toPrint.toString();
 	}
 
-	// une fois un certain Cours est choisi, proposer un menu d'options de modifications
+
 	/**
+	 * prendre un objet Cours (une fois un certain Cours est choisi), proposer un menu d'options de modifications sur un cours donné
 	 * @param coursAModifier
 	 * @param repertoireCours
 	 * @param scanner
@@ -175,9 +178,10 @@ public class Utils {
 			}
 		}
 	}
-	
-	// lancer menu changer nb credits pour un cours,  
+
+
 	/**
+	 * lancer menu changer nb credits pour un cours donné
 	 * @param coursAModifier
 	 * @param scanner
 	 */
@@ -188,7 +192,6 @@ public class Utils {
 				int nvNbCredits = Integer.parseInt(scanner.nextLine());
 				coursAModifier.setNbCredits(nvNbCredits);
 				System.out.println("Nombre de crédits maintenant : " + nvNbCredits);
-//				return coursAModifier.toStringAvecNumero() + menuAppend;   // maj cours a afficher
 				break;
 			} catch (ValidationException e) {
 				System.out.println("ne peut pas etre negatif ou 0!");
@@ -197,9 +200,9 @@ public class Utils {
 		}
 	}
 
-	// lancer menu pour prendre input pour instancier horaire examen, va faire differentes verif en fonction de si c'est intra ou final
 	/**
-	 * @param estIntra
+	 * lancer menu pour prendre input pour instancier horaire examen, va attraper des erreurs propagées des setters (dates cohérentes)
+	 * @param estIntra (mettre TRUE sil s'agit d'un intra, false si final)
 	 * @param scanner
 	 * @param coursAModifier
 	 */
@@ -225,6 +228,7 @@ public class Utils {
 	}
 
 	/**
+	 * supprimer un cours sélectionné
 	 * @param coursASupprimer
 	 * @param repertoireCours
 	 */
@@ -234,6 +238,7 @@ public class Utils {
 	}
 
 	/**
+	 * lancer menu de création de nouveau cours, tous les attributs et horaires associés (TH, TP, examI, examF, sigle...)
 	 * @param repertoireCours
 	 * @param scanner
 	 */
@@ -260,9 +265,10 @@ public class Utils {
 	}
 
 	/**
+	 * lancer menu création d'un cours à partir d'un sigle et d'un nombre de crédits saisis. inclut une vérification si sigle existe déjà
 	 * @param scanner
 	 * @param repertoire
-	 * @return
+	 * @return objet Cours nouveau cours créé 
 	 */
 	private static Cours instancierCoursSigle(Scanner scanner, TreeSet<Cours> repertoire) {
 		boolean continuer = true;
@@ -302,9 +308,10 @@ public class Utils {
 
 
 	/**
+	 * vérifie si sigle existe déjà dans le repertoire existant
 	 * @param sigle
 	 * @param repertoire
-	 * @return
+	 * @return TRUE si existe déjà
 	 */
 	private static boolean sigleExisteDeja(String sigle, TreeSet<Cours> repertoire) {
 		boolean existe = false;
@@ -318,10 +325,12 @@ public class Utils {
 	}
 
 	/**
+	 * lancer menu de saisie pour prendre les horaires session, que ce soit pour les cours ou pour les examens. 
+	 * inclut des affectations/calcul de dates automatique s'il sagit d'un examen (date début = date fin pour les examens) 
 	 * @param typeDeCours
 	 * @param scanner
-	 * @param estExam
-	 * @return
+	 * @param estExam (mettre TRUE s'il s'agit d'un examen, FALSE sinon)
+	 * @return objet HoraireSession instancié
 	 */
 	public static HoraireSession inputHoraireSession(String typeDeCours, Scanner scanner, boolean estExam) {
 		boolean continuer = true;
@@ -389,8 +398,8 @@ public class Utils {
 		return horaireSession;
 	}
 
-	// prendre input, add jours de la semaine avec horaires
-	/**
+
+	/**  prendre input, add jours de la semaine avec horaires
 	 * @param scanner
 	 * @param estExam
 	 * @param dateDebut
@@ -461,9 +470,10 @@ public class Utils {
 
 
 	/**
-	 * @param msgPrecisionCours
+	 * lancer menu de création d'horaire (heure début/fin)
+	 * @param msgPrecisionCours (qui fera partie du message affiché à l'utilisateur)
 	 * @param scanner
-	 * @return
+	 * @return objet HoraireHeure instancié
 	 */
 	public static HoraireHeure prendreInputHoraireHeure(String msgPrecisionCours, Scanner scanner) {
 		boolean continuer = true;
