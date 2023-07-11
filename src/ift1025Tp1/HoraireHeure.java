@@ -5,25 +5,25 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 
-/*
- * 
-attributs : heureDébut, heureFin
-(eg. 08:30, 10:30) utiliser Calendar localtime
-*/
 
+/**
+ * La classe HoraireHeure comporte les heure de début et de fin d'un certain horaire hebdomadaire (HoraireSemaine)
+ * Un objet horaireHeure est comme suit : 
+ * 12:00-14:00 
+ * 
+ *
+ */
 public class HoraireHeure {
 
-// attributs: 
+	// attributs: 
 	private LocalTime heureDebut;
 	private LocalTime heureFin;
 	
 
-	
 	// constructeur
 	public HoraireHeure(String heureDebutString, String heureFinString) throws DateTimeParseException {
 		this.heureDebut = parseHeure(heureDebutString);
 		this.heureFin = parseHeure(heureFinString);
-		// TODO verifier heure fin apres debut 
 	}
 	
 	public HoraireHeure(String heureDebutString) throws DateTimeParseException {

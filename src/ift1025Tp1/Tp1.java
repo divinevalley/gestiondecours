@@ -4,9 +4,27 @@ package ift1025Tp1;
  * TP1 Système de gestion des cours
  * IFT 1025 Programmation 2 
  * Eté 2023  
- * Juillet 2023 
+ * Remise : juillet 2023
  * 
- * @author mimit, Deanna Wung
+ * Programme qui propose un menu de création et modification de repertoire de cours universitaires, 
+ * y compris pour tous les horaires de cours théoriques (TH), cours pratiques (TP), examens intra et 
+ * final, les sigles et les nombre de crédits. Permet de créer un emploi du temps personnalisé et 
+ * renvoie des messages en cas d'erreur de saisie ou d'incohérence (eg. heure de fin avant heure de 
+ * début, conflit horaire, etc). 
+ *  
+ * 
+ * Lire les javadoc des classes dans cet ordre : 
+ * 
+ * Tp1
+ * Cours
+ * HoraireSession 
+ * HoraireSemaine 
+ * HoraireHeure 
+ * EmploiDuTemps
+ * Utils
+ * ValidationException
+ * 
+ * @author Meriem Ghaoui, Deanna Wung
  * 
  */
 
@@ -101,11 +119,11 @@ public class Tp1 {
                     emploiDuTemps = Utils.prendreInputCreerEmploiDuTemps(scanner, repertoireCoursDispo, emploiDuTemps); 
                     break;
                 case "4": 
-                	// modifier (supprimer) emploi du temps
+                	// modifier (supprimer des cours) emploi du temps
                 	Utils.modifierEmploiDuTemps(scanner, emploiDuTemps);
                 	break;
                 case "5": 
-                	// modifier (supprimer) emploi du temps
+                	// modifier (ajouter des cours) emploi du temps
                 	Utils.ajouterEmploiDuTemps(repertoireCoursDispo, scanner, emploiDuTemps);
                 	break;	
                 case "0":

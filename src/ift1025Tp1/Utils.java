@@ -9,9 +9,14 @@ import java.util.TreeSet;
 
 import ift1025Tp1.EmploiDuTemps.CoursDejaAjouteException;
 
+/**
+ * La grande majorité des fonctions sont rangées ici. Cette classe ne sera jamais instanciée. 
+ * Toutes les fonctions sont static. Permet d'alléger le code du "main."      
+ */
 public class Utils {
-	// pour github commands: C:\Users\Deanna\Documents\UdeM\IFT1025 programmation 2\devoirs notés TP\tp1\Tp1\src\ift1025Tp1>
+	// pour github commands: C:\Users\Deanna\Documents\UdeM\IFT1025 programmation 2\devoirs notés TP\tp1\Tp1\src\ift1025Tp1
 
+	
 	/**
 	 * lancer le menu pour l'utilisateur de sélectionner et modifier un cours depuis le repertoire
 	 * @param repertoireCours
@@ -24,7 +29,7 @@ public class Utils {
 			//afficher repertoire cours
 			System.out.println(coursToStringNumerote(repertoireCours));
 			String optionsMenuAAfficher = "Saisir le numero correspondant au cours que vous souhaitez modifier."
-					+ " \n(ou faites le 0 pour quitter)"
+					+ " \n(ou faites le 0 pour quitter et revenir sur le repertoire)"
 					+ "\n\nCours a modifier: ";
 			System.out.println(optionsMenuAAfficher);
 
@@ -444,8 +449,6 @@ public class Utils {
 					// ajouter au Set 
 					setAvecHorairesSemaines.add(horaireSemaine);
 
-					System.out.println("horaire semaine : " + setAvecHorairesSemaines);
-
 					if (estExam) { // si exam, pas besoin de demander si ça prend lieu d'autres jours de la semaine. on s'arrete là.
 						break;
 					}
@@ -514,18 +517,17 @@ public class Utils {
 	}
 
 
-	// afficher le repértoire des cours, instancier un objet EmploiDuTemps à partir du input de l'utilisateur
-	/**
+	/**afficher le repértoire des cours, instancier un objet EmploiDuTemps à partir du input de l'utilisateur
 	 * @param scanner
 	 * @param repertoireCours
 	 * @param emploiDuTemps
-	 * @return
+	 * @return EmploiDuTemps modifié
 	 */
 	public static EmploiDuTemps prendreInputCreerEmploiDuTemps(Scanner scanner, TreeSet<Cours> repertoireCours, EmploiDuTemps emploiDuTemps) {
 
 		// tout d'abord, créer un emploi du temps vide
 		System.out.println("\n----------Menu Création d'emploi du temps--------");
-
+		System.out.println("Création d'un nouvel emploi du temps. Celui ci va écraser tout ancien emploi du temps créé");
 		boolean continuer = true;
 		while(continuer) {
 			// demander nb de credits
@@ -544,12 +546,12 @@ public class Utils {
 		return emploiDuTemps;
 	}
 
-	//lancer menu ajouter emploi du temps, renvoie nouvel objet emploi du temps modifié
-	/**
+
+	/**lancer menu ajouter emploi du temps, pour que l'utilisateur puisse ajouter des cours, renvoie nouvel objet emploi du temps modifié
 	 * @param repertoireCours
 	 * @param scanner
 	 * @param emploiDuTemps
-	 * @return
+	 * @return EmploiDuTemps modifié
 	 */
 	public static EmploiDuTemps ajouterEmploiDuTemps(TreeSet<Cours> repertoireCours, Scanner scanner, EmploiDuTemps emploiDuTemps) {
 		boolean continuer = true;
@@ -561,7 +563,14 @@ public class Utils {
 
 			// afficher emploi du temps actuel
 			System.out.println("\n=======Votre emploi du temps actuel:=======");
-			System.out.println(emploiDuTemps.toString());
+			
+			try {
+				System.out.println(emploiDuTemps.toString());
+			} catch (NullPointerException e) {
+				System.out.println("Vous devez d'abord créer votre emploi du temps");
+				break;
+			}
+			
 
 			System.out.println(msgErreur);
 			System.out.println("\n\nVeuillez sélectionner le numéro du cours que vous souhaitez ajouter (eg. \"1\") \n"
@@ -610,29 +619,25 @@ public class Utils {
 	}
 
 
-	//afficher emploi du temps avec numerotation pour suppression
-	/**
+	/**afficher emploi du temps avec numerotation pour suppression
 	 * @param scanner
 	 * @param emploiDuTemps
-	 * @return
+	 * @return EmploiDuTemps modifié
 	 */
 	public static EmploiDuTemps modifierEmploiDuTemps(Scanner scanner, EmploiDuTemps emploiDuTemps) {
 		try {
 
 
-			//			boolean continuer = true;
-
 			while(true) {
 				//afficher emploi du temps avec numerotation
 				ArrayList<Cours> listCours = afficherEmploiDuTempsNumerote(emploiDuTemps);
-
+				String msgErreur = "";
 				System.out.println("\nSélectionner le numéro du cours à supprimer "
 						+ "\nFaites le \"c\" pour changer nombre de crédits"
 						+ "\n(ou faites le 0 pour quitter/terminer) ");
 				String input = scanner.nextLine();
 
 				if (input.equals("0")) { //quitter
-
 					break;
 				}
 
@@ -646,10 +651,11 @@ public class Utils {
 					Cours coursSelectionner = listCours.get(inputInt-1); // -1 pour ajuster index
 					emploiDuTemps.supprimerCours(coursSelectionner);
 					listCours = afficherEmploiDuTempsNumerote(emploiDuTemps); // nouvel affichage
+					msgErreur=""; //vider msgErreur car plus d'erreur
 				} catch (NumberFormatException e) {
-					System.out.println("Invalide. doit etre un numero. eg. 1\nReessayer:");
+					msgErreur = "Invalide. doit etre un numero. eg. 1\nReessayer:";
 				} catch (IndexOutOfBoundsException e) {
-					System.out.println("Cours n'existe pas! Reessayer:");
+					msgErreur="Cours n'existe pas! Reessayer:";
 				}
 			}
 		} catch (IllegalStateException e) {
@@ -659,6 +665,7 @@ public class Utils {
 	}
 
 	/**
+	 * permet l'utilisateur de changer le nombre de crédits max de son emploi du temps personnalisé   
 	 * @param emploiDuTemps
 	 * @param scanner
 	 */
@@ -680,8 +687,11 @@ public class Utils {
 	}
 
 	/**
+	 * affiche (print) l'emploi du temps avec cours numerotés, renvoie la liste de cours 
+	 * en ArrayList (pour avoir indexation) 
+	 * 
 	 * @param emploiDuTemps
-	 * @return
+	 * @return ArrayList<Cours> dans emploi du temps
 	 * @throws IllegalStateException
 	 */
 	private static ArrayList<Cours> afficherEmploiDuTempsNumerote(EmploiDuTemps emploiDuTemps) throws IllegalStateException {

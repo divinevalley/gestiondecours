@@ -5,16 +5,28 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.InputMismatchException;
+/**
+ * La classe HoraireSession est utilisée pour représenter un certain horaire TH, TP, ou examen. 
+ * Elle comporte une date de début et une date de fin (eg. 2023-01-01 au 2023-05-05)
+ * ainsi qu'un horaire hebdomadaire (HoraireSemaine) (eg.  lundis, 08:00-10:00 ; jeudis 09:00-10:00) 
+ * 
+ * Un exemple d'HoraireSession TH est comme suit :
+ *  
+ * cours TH: Dates : 2023-01-01 - 2023-05-05	[vendredi, 20:00-21:00.]
+ * 
+ * Notez que si un HoraireSession a lieu sur un meme jour plutôt que sur plusieurs semaines, 
+ * (dans le cas d'un examen), la date de début va être égale à la date de fin. Mais elle va toujours 
+ * avoir un horaire hebdomadaire (horaireSemaine) car toujours besoin d'une heure de début/fin 
+ * pour l'examen.  
+ */
 public class HoraireSession {
 
 	//attributs:
 	private LocalDate dateDebut;
 	private LocalDate dateFin;
-	private HashSet<HoraireSemaine> horaireSemaine; // va pas accepter de doublons
-	
-	//	(eg. dateDebut=2023/01/05, dateFin=2023/04/30, [horaireSemaine lundi avec heureDéb/fin, 
-	// mercredi avec heure Déb/Fin])
-	
+	private HashSet<HoraireSemaine> horaireSemaine; // eg. lundis, 08:00-10:00 ; jeudis 09:00-10:00 
+	// HashSet pour ne pas accepter de doublons
+		
 	//constructeur
 	public HoraireSession(String dateDebut, String dateFin) {
 		this.dateDebut = parseDate(dateDebut);
@@ -69,8 +81,9 @@ public class HoraireSession {
 	}
 	
 	/**
+	 * évalue si conflit existe entre l'horaire session et un uatre horaire session 
 	 * @param autre
-	 * @return
+	 * @return true si conflit existe
 	 */
 	public boolean conflit(HoraireSession autre) {
 		//check null
@@ -82,14 +95,8 @@ public class HoraireSession {
 		if (autre.dateDebut.isBefore(this.dateFin) && this.dateFin.isAfter(autre.dateDebut)) {
 			// checker si conflit jour (càd partage le meme jour de la semaine)
 			for (HoraireSemaine thisHoraire : this.horaireSemaine) {
-//				System.out.println("1. for : " + this.horaireSemaine);
+
 				for (HoraireSemaine autreHoraire: autre.horaireSemaine) {
-//					System.out.println("2. for: " + autre.horaireSemaine);
-//					System.out.println("on compare this horaire semaine: " + thisHoraire + " avec autrehoraire: " + autre.horaireSemaine);
-					
-//					if (thisHoraire.conflit(autreHoraire)) {
-//						System.out.println("TRUE! horaire conflit! this: " +  this.horaireSemaine + " avec " + autre.horaireSemaine);
-//					}
 					return thisHoraire.conflit(autreHoraire);					
 				}
 			}

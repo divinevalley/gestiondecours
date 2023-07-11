@@ -2,14 +2,20 @@ package ift1025Tp1;
 
 import java.util.InputMismatchException;
 
+/**
+ * La classe HoraireSemaine représente l'horaire régulier hebdomadaire, utilisé pour les cours TH et TP 
+ * Un objet HoraireSemaine comporte un jour de la semaine (eg. tous les lundis), représenté par un int 
+ * (1 pour lundi, 2 pour mardi, etc), et un objet HoraireHeure (qui comporte l'heure de Début / fin) 
+ * pour ce jour. Donc un objet HoraireSemaine peut être le suivant : 
+ * 
+ *  [jeudi, 12:00-14:00; vendredi, 12:00-13:00]
+ *
+ */
 public class HoraireSemaine {
 
 	//attributs:
-	private int jourDeLaSemaine;
-	private HoraireHeure horaireHeure;
-
-	//(eg. jourDeLaSemaine = 1 pour lundi, horaireHeure = comporte heureDébut/Fin)
-
+	private int jourDeLaSemaine; // 1 pour lundi, 2 pour mardi, etc 
+	private HoraireHeure horaireHeure; // comporte heureDébut/Fin)
 
 	// constructeur
 	public HoraireSemaine(int jourDeLaSemaine) {
@@ -55,7 +61,7 @@ public class HoraireSemaine {
 	}
 	
 	/**
-	 * converti les int (eg. "1") en nom du jour de la semaine string
+	 * convertit les int (eg. "1") en nom du jour de la semaine string
 	 * @return le nom du jour en format string
 	 */
 	public String jourSemaineEnString() {
