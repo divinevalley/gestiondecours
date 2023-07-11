@@ -14,12 +14,6 @@ public class Utils {
 	// pour github commands: C:\Users\Deanna\Documents\UdeM\IFT1025 programmation 2\devoirs notés TP\tp1\Tp1\src\ift1025Tp1>
 
 
-	// TODO 
-	// x - verifier horaire coherent (pas 09:00 - 08:00)
-	//  - verifier si conflit horaire au sein d'un meme cours
-	//  - proposer modification d'une seule partie plutôt que parcourir tout le menu
-	// x - permettre de skip la partie TP, si pas de TP, pas d'examen intra, etc 
-
 
 	public static void menuModifierCours(TreeSet<Cours> repertoireCours, Scanner scanner) {
 		boolean continuer = true;
