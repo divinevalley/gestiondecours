@@ -10,24 +10,16 @@ public class EmploiDuTemps {
 	private int nbCreditMax;
 	private int nbCreditsTotal;
 
-	public class ValidationException extends Exception {
-		public ValidationException(String message) {
-			super(message);
-		}
 
-		public ValidationException() {
-			super();
-		}
-
-
-	}
-
+	/**
+	 * exception qui signale qu'un cours a déjà été ajouté
+	 *
+	 */
 	public class CoursDejaAjouteException extends Exception {
 		public CoursDejaAjouteException() {
 			super();
 		}
 	}
-
 
 	// constructeur : 
 	public EmploiDuTemps(int nbCreditMax) {
@@ -45,8 +37,6 @@ public class EmploiDuTemps {
 		return nbCreditsTotal;
 	}
 
-
-
 	public ArrayList<Cours> getListeCours() {
 		return listeCours;
 	}
@@ -59,7 +49,10 @@ public class EmploiDuTemps {
 		return nbCreditMax;
 	}
 
-	public void setNbCreditMax(int nbCreditMax) {
+	public void setNbCreditMax(int nbCreditMax) throws ValidationException {
+		if (nbCreditMax<=0) {
+			throw new ValidationException();
+		}
 		this.nbCreditMax = nbCreditMax;
 	}
 
@@ -68,6 +61,15 @@ public class EmploiDuTemps {
 	}
 
 	//fonctions : 
+	/**
+	 * ajouter un cours à l'emploi du temps personnalisé. inclut des validations si jamais le cours a déjà été ajouté, si ça dépasse
+	 * le nb de crédit max, ou s'il y a un conflit horaire
+	 * 
+	 * @param cours
+	 * @throws ValidationException
+	 * @throws CoursDejaAjouteException
+	 * @throws InputMismatchException
+	 */
 	public void ajouterCours (Cours cours) throws ValidationException, CoursDejaAjouteException, InputMismatchException {
 		if (listeCours.contains(cours)) { // si deja ajoute
 			throw new CoursDejaAjouteException();
@@ -89,8 +91,11 @@ public class EmploiDuTemps {
 	}
 
 
-	//fonctions annexe : 
 	// return TRUE si conflit
+	/**
+	 * @param cours
+	 * @return
+	 */
 	public boolean calculerConflit (Cours cours){
 		//parcourir tous les cours deja inscrit, identifier si problem
 		if (this.listeCours.isEmpty()) {
@@ -106,18 +111,15 @@ public class EmploiDuTemps {
 	}
 
 	// return TRUE si depasse max
+	/**
+	 * @param cours
+	 * @return
+	 */
 	public boolean depasseMax(Cours cours) {
 		int nbCreditsSiAjoute = nbCreditsTotal + cours.getNbCredits();
 		return (nbCreditsSiAjoute > nbCreditMax); 
 	}
 
-	//
-	//	@Override
-	//	public String toString() {
-	//		return "EmploiDuTemps [" + (listeCours != null ? "listeCours=" + listeCours + ", " : "") + "nbCreditMax="
-	//				+ nbCreditMax + ", nbCreditsTotal=" + nbCreditsTotal + "]";
-	//	}
-	//	
 
 	public String afficherCredits() {
 		return "\nNombre de credits: " + nbCreditsTotal + " (max: " + nbCreditMax + " credits)";

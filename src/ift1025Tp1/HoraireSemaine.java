@@ -41,6 +41,11 @@ public class HoraireSemaine {
 	}
 
 
+	/**
+	 * évalue si conflit existe entre cet horaireSemaine et autre HoraireSemaine
+	 * @param autre HoraireSemaine
+	 * @return boolean TRUE si conflit existe
+	 */
 	public boolean conflit(HoraireSemaine autre) {
 		if (this.jourDeLaSemaine == autre.jourDeLaSemaine) { // seulement si meme jour	
 //			System.out.println("this.jour " + this.jourDeLaSemaine + " == " + autre.jourDeLaSemaine); // TODO remove
@@ -49,6 +54,10 @@ public class HoraireSemaine {
 		return false;
 	}
 	
+	/**
+	 * converti les int (eg. "1") en nom du jour de la semaine string
+	 * @return le nom du jour en format string
+	 */
 	public String jourSemaineEnString() {
 		String jourSemaineString = "";
 

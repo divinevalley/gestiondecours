@@ -15,7 +15,7 @@ public class HoraireSession {
 	//	(eg. dateDebut=2023/01/05, dateFin=2023/04/30, [horaireSemaine lundi avec heureDéb/fin, 
 	// mercredi avec heure Déb/Fin])
 	
-	
+	//constructeur
 	public HoraireSession(String dateDebut, String dateFin) {
 		this.dateDebut = parseDate(dateDebut);
 		this.dateFin = parseDate(dateFin);
@@ -68,6 +68,10 @@ public class HoraireSession {
 		this.horaireSemaine.add(horaireSemaine);
 	}
 	
+	/**
+	 * @param autre
+	 * @return
+	 */
 	public boolean conflit(HoraireSession autre) {
 		//check null
 		if(this==null || autre == null) {
@@ -99,9 +103,7 @@ public class HoraireSession {
 	}
 	@Override
 	public String toString() {
-		return "Dates : " + dateDebut + " - " + dateFin + "\t" + horaireSemaine;
+		return "Dates : " + dateDebut + " - " + dateFin + "\t" + (horaireSemaine != null ? horaireSemaine: "");
 	}
-
-	
 
 }

@@ -34,6 +34,11 @@ public class HoraireHeure {
 	public HoraireHeure() {
 	}
 	
+	/**
+	 * @param String heureAParser eg. 08:00
+	 * @return objet LocalTime pour préparer à l'affectation aux attributs 
+	 * @throws DateTimeParseException
+	 */
 	public LocalTime parseHeure(String heureAParser) throws DateTimeParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return LocalTime.parse(heureAParser, formatter);
@@ -52,6 +57,12 @@ public class HoraireHeure {
 	}
 
 
+	/**
+	 * setter de HeureFin qui inclut une vérficiation que l'heure de Fin n'est pas avant l'heure de Début (incohérent) 
+	 * @param heureFin
+	 * @throws DateTimeParseException
+	 * @throws InputMismatchException
+	 */
 	public void setHeureFin(String heureFin) throws DateTimeParseException, InputMismatchException {
 		LocalTime heureFinTime = parseHeure(heureFin);
 		// verifier si coherent (on n'a pas de chose du genre 09:00-08:00) 
@@ -63,15 +74,13 @@ public class HoraireHeure {
 
 	}
 
+	/**
+	 * évalue si conflit existe entre deux HoraireHeures
+	 * @param autre
+	 * @return
+	 */
 	public boolean conflit(HoraireHeure autre) {
 		return (this.heureFin.isAfter(autre.heureDebut) && this.heureDebut.isBefore(autre.heureFin));
-		
-//		if (this.heureFin.isAfter(autre.heureDebut) && this.heureDebut.isBefore(autre.heureFin)) {
-//			System.out.println("thisheurefin" + this.heureFin + " is after autreheuredebut:" + autre.heureDebut);
-//			System.out.println("ou " + this.heureDebut + " is before autreheurefin: " + autre.heureFin);
-//			return true;
-//		} 
-//		return false;
 	}
 	
 	@Override
