@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashSet;
+import java.util.InputMismatchException;
 public class HoraireSession {
 
 	//attributs:
@@ -42,8 +43,14 @@ public class HoraireSession {
 		return dateFin;
 	}
 
-	public void setDateFin(String dateFin) {
-		this.dateFin = parseDate(dateFin);
+	public void setDateFin(String dateFin) throws InputMismatchException {
+		LocalDate dateFinParse = parseDate(dateFin);
+		if (dateFinParse.isBefore(dateDebut)) {
+			throw new InputMismatchException();
+		} else {
+			this.dateFin = dateFinParse;
+		}
+		
 	}
 
 	public HashSet<HoraireSemaine> getHoraireSemaine() {
@@ -62,6 +69,11 @@ public class HoraireSession {
 	}
 	
 	public boolean conflit(HoraireSession autre) {
+		//check null
+		if(this==null || autre == null) {
+			return false; // si un des deux horaires est complètement null, on va dire aucun conflit
+		}
+		
 		// d'abord checker si overlap entre dates session (càd les deux sont de la meme session)
 		if (autre.dateDebut.isBefore(this.dateFin) && this.dateFin.isAfter(autre.dateDebut)) {
 			// checker si conflit jour (càd partage le meme jour de la semaine)
@@ -80,10 +92,11 @@ public class HoraireSession {
 		}
 		return false;
 	}
-	
-	// TODO calculer conflit si examen
-	
 
+	
+	public String toStringDatesSeulement() {
+		return "Dates : " + dateDebut + " - " + dateFin;
+	}
 	@Override
 	public String toString() {
 		return "Dates : " + dateDebut + " - " + dateFin + "\t" + horaireSemaine;

@@ -75,9 +75,10 @@ public class Tp1 {
         String menuMain = "Menu MAIN :\n" + 
         		"1. (TGDE) Visualiser tous les cours du repertoire et/ou modifier un cours existant\n" +
         		"2. (TGDE) Créer un nouveau cours pour le repertoire de cours\n" +
-        		"3. Creer et ajouter des cours a un emploi du temps personnalisé\n" + 
-        		"4. Modifier (supprimer des cours) de l'emploi du temps\n" + 
-        		"0. Quitter le programme";
+        		"3. Créer un emploi du temps personnalisé pour la première fois\n" + 
+        		"4. Modifier (supprimer des cours) de l'emploi du temps existant\n" + 
+        		"5. Ajouter des cours à l'emploi du temps existant\n"
+        		+ "0. Quitter le programme";
         
         boolean continuer = true;
 
@@ -103,6 +104,10 @@ public class Tp1 {
                 	// modifier (supprimer) emploi du temps
                 	Utils.modifierEmploiDuTemps(scanner, emploiDuTemps);
                 	break;
+                case "5": 
+                	// modifier (supprimer) emploi du temps
+                	Utils.ajouterEmploiDuTemps(repertoireCoursDispo, scanner, emploiDuTemps);
+                	break;	
                 case "0":
                     // Quitter
                     System.out.println("Quitter le programme... au revoir.");

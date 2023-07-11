@@ -77,68 +77,68 @@ public class EmploiDuTemps {
 			} else if (calculerConflit(cours)) { // ensuite verifier si conflit existe  
 				throw new ValidationException(); 
 			} else { // sinon, ok pour ajouter
-			listeCours.add(cours);
-			nbCreditsTotal+= cours.getNbCredits();
+				listeCours.add(cours);
+				nbCreditsTotal+= cours.getNbCredits();
+			}
+		} 
+	}
+
+	public void supprimerCours(Cours cours) {	
+		listeCours.remove(cours);
+		nbCreditsTotal -= cours.getNbCredits();
+	}
+
+
+	//fonctions annexe : 
+	// return TRUE si conflit
+	public boolean calculerConflit (Cours cours){
+		//parcourir tous les cours deja inscrit, identifier si problem
+		if (this.listeCours.isEmpty()) {
+			return false;
 		}
-	} 
-}
 
-public void supprimerCours(Cours cours) {	
-	listeCours.remove(cours);
-	nbCreditsTotal -= cours.getNbCredits();
-}
-
-
-//fonctions annexe : 
-// return TRUE si conflit
-public boolean calculerConflit (Cours cours){
-	//parcourir tous les cours deja inscrit, identifier si problem
-	if (this.listeCours.isEmpty()) {
+		for (Cours coursDejaInscrit : this.listeCours) { // parcourir tous les cours deja dans emploi du temps
+			if( coursDejaInscrit.conflit(cours)) {
+				return true; // si j'amais c'est TRUE, on s'arrête là, on renvoie true. sinon, continue boucle
+			}	
+		}
 		return false;
 	}
 
-	for (Cours coursDejaInscrit : this.listeCours) { // parcourir tous les cours deja dans emploi du temps
-		if(coursDejaInscrit.conflit(cours)) { 
-			return true;
+	// return TRUE si depasse max
+	public boolean depasseMax(Cours cours) {
+		int nbCreditsSiAjoute = nbCreditsTotal + cours.getNbCredits();
+		return (nbCreditsSiAjoute > nbCreditMax); 
+	}
+
+	//
+	//	@Override
+	//	public String toString() {
+	//		return "EmploiDuTemps [" + (listeCours != null ? "listeCours=" + listeCours + ", " : "") + "nbCreditMax="
+	//				+ nbCreditMax + ", nbCreditsTotal=" + nbCreditsTotal + "]";
+	//	}
+	//	
+
+	public String afficherCredits() {
+		return "\nNombre de credits: " + nbCreditsTotal + " (max: " + nbCreditMax + " credits)";
+	}
+
+	//afficher horaire 
+	@Override
+	public String toString() {
+
+		StringBuilder toString = new StringBuilder("");
+		if (listeCours.isEmpty()) {
+			toString.append("--Emploi du temps vide--"); 
+		} else {
+			toString.append("EmploiDuTemps:\n" + listeCours);
 		}
+
+
+		toString.append("\nNombre de credits: " + nbCreditsTotal + " (max: " + nbCreditMax + " credits)");
+
+		return toString.toString();
 	}
-	return false;
-}
-
-// return TRUE si depasse max
-public boolean depasseMax(Cours cours) {
-	int nbCreditsSiAjoute = nbCreditsTotal + cours.getNbCredits();
-	return (nbCreditsSiAjoute > nbCreditMax); 
-}
-
-//
-//	@Override
-//	public String toString() {
-//		return "EmploiDuTemps [" + (listeCours != null ? "listeCours=" + listeCours + ", " : "") + "nbCreditMax="
-//				+ nbCreditMax + ", nbCreditsTotal=" + nbCreditsTotal + "]";
-//	}
-//	
-
-public String afficherCredits() {
-	return "\nNombre de credits: " + nbCreditsTotal + " (max: " + nbCreditMax + " credits)";
-}
-
-//afficher horaire 
-@Override
-public String toString() {
-
-	StringBuilder toString = new StringBuilder("");
-	if (listeCours.isEmpty()) {
-		toString.append("--Emploi du temps vide--"); 
-	} else {
-		toString.append("EmploiDuTemps:\n" + listeCours);
-	}
-
-
-	toString.append("\nNombre de credits: " + nbCreditsTotal + " (max: " + nbCreditMax + " credits)");
-
-	return toString.toString();
-}
 
 
 

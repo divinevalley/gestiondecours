@@ -3,6 +3,7 @@ package ift1025Tp1;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.InputMismatchException;
 
 /*
  * 
@@ -51,8 +52,15 @@ public class HoraireHeure {
 	}
 
 
-	public void setHeureFin(String heureFin) throws DateTimeParseException {
-		this.heureFin = parseHeure(heureFin);
+	public void setHeureFin(String heureFin) throws DateTimeParseException, InputMismatchException {
+		LocalTime heureFinTime = parseHeure(heureFin);
+		// verifier si coherent (on n'a pas de chose du genre 09:00-08:00) 
+		if (heureFinTime.isBefore(this.heureDebut)) {
+			throw new InputMismatchException();
+		} else {
+			this.heureFin = heureFinTime;			
+		}
+
 	}
 
 	public boolean conflit(HoraireHeure autre) {
