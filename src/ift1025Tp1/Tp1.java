@@ -38,26 +38,44 @@ public class Tp1 {
     	TreeSet<Cours> repertoireCoursDispo = new TreeSet<>(); 
     	EmploiDuTemps emploiDuTemps = new EmploiDuTemps();
     	
-    	// exemple repertoire (pour tester): 
+    	// exemple repertoire de cours (pour faciliter les tests): 
+    	// pour TH: 
     	HoraireSession sessionHiver1 = new HoraireSession("2023-01-01", "2023-05-05");
     	HoraireSession sessionHiver2 = new HoraireSession("2023-01-01", "2023-05-05");
     	HoraireSession sessionHiver3 = new HoraireSession("2023-01-01", "2023-05-05");
     	HoraireSession sessionHiver4 = new HoraireSession("2023-01-01", "2023-05-05");
     	HoraireSession sessionHiver5 = new HoraireSession("2023-01-01", "2023-05-05");
-    	
     	sessionHiver1.addHoraireSemaine(1, "08:00", "10:00");
     	sessionHiver2.addHoraireSemaine(2, "10:00", "12:00");
     	sessionHiver3.addHoraireSemaine(3, "13:00", "14:00");
     	sessionHiver4.addHoraireSemaine(4, "18:00", "19:00");
     	sessionHiver5.addHoraireSemaine(5, "20:00", "21:00");
     	
+    	// pour TP: 
+    	HoraireSession sessionHiverTP1 = new HoraireSession("2023-01-01", "2023-05-05");
+    	HoraireSession sessionHiverTP2 = new HoraireSession("2023-01-01", "2023-05-05");
+    	HoraireSession sessionHiverTP3 = new HoraireSession("2023-01-01", "2023-05-05");
+    	HoraireSession sessionHiverTP4 = new HoraireSession("2023-01-01", "2023-05-05");
+    	HoraireSession sessionHiverTP5 = new HoraireSession("2023-01-01", "2023-05-05");
+    	sessionHiverTP1.addHoraireSemaine(5, "08:00", "10:00");
+    	sessionHiverTP2.addHoraireSemaine(1, "08:00", "10:00");
+    	sessionHiverTP3.addHoraireSemaine(2, "11:00", "12:00");
+    	sessionHiverTP4.addHoraireSemaine(5, "12:00", "14:00");
+    	sessionHiverTP5.addHoraireSemaine(3, "12:00", "14:00");
+    	
+    	// exams intra
     	HoraireSession examDate1 = new HoraireSession("2023-03-03", "2023-03-03");
     	HoraireSession examDate2 = new HoraireSession("2023-03-04", "2023-03-04");
     	HoraireSession examDate3 = new HoraireSession("2023-03-05", "2023-03-05");
     	HoraireSession examDate4 = new HoraireSession("2023-03-10", "2023-03-10");
     	HoraireSession examDate5 = new HoraireSession("2023-03-15", "2023-03-15");
+    	examDate1.addHoraireSemaine(1, "13:00", "12:00");
+    	examDate2.addHoraireSemaine(4, "08:00", "11:00");    	
+    	examDate3.addHoraireSemaine(2, "11:00", "16:00");
+    	examDate4.addHoraireSemaine(5, "19:00", "20:00");
+    	examDate5.addHoraireSemaine(2, "15:00", "18:00");
     	
-    	
+    	// exams finaux
     	HoraireSession examDateFinal1 = new HoraireSession("2023-05-03", "2023-05-03");
     	HoraireSession examDateFinal2 = new HoraireSession("2023-05-05", "2023-05-05");
     	HoraireSession examDateFinal3 = new HoraireSession("2023-05-08", "2023-05-08");
@@ -88,6 +106,7 @@ public class Tp1 {
     	repertoireCoursDispo.add(cours6);
     	
     	
+    	// programme avec menu commence ici 
         Scanner scanner = new Scanner(System.in);
         
         String menuMain = "Menu MAIN :\n" + 

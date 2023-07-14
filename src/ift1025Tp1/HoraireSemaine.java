@@ -54,7 +54,6 @@ public class HoraireSemaine {
 	 */
 	public boolean conflit(HoraireSemaine autre) {
 		if (this.jourDeLaSemaine == autre.jourDeLaSemaine) { // seulement si meme jour	
-//			System.out.println("this.jour " + this.jourDeLaSemaine + " == " + autre.jourDeLaSemaine); // TODO remove
 			return (this.horaireHeure.conflit(autre.horaireHeure));
 		}
 		return false;

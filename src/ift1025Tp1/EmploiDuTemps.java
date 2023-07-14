@@ -23,7 +23,10 @@ public class EmploiDuTemps {
 	}
 
 	// constructeur : 
-	public EmploiDuTemps(int nbCreditMax) {
+	public EmploiDuTemps(int nbCreditMax) throws ValidationException{
+		if (nbCreditMax<=0) {
+			throw new ValidationException();
+		}
 		this.nbCreditMax = nbCreditMax;
 		this.nbCreditsTotal=0;
 		this.maxConflits=0;
@@ -103,35 +106,41 @@ public class EmploiDuTemps {
 	 * @throws InputMismatchException
 	 */
 	public void ajouterCours (Cours cours) throws ValidationException, CoursDejaAjouteException, InputMismatchException {
-		if (listeCours.contains(cours)) { // si deja ajoute
+		if (listeCours.contains(cours)) { // si deja ajoute, on s'arrete la
 			throw new CoursDejaAjouteException();
 		} else {
 			if(depasseMaxCredits(cours)) { // si depasse max credits on s'arrete la 
 				throw new InputMismatchException(); 
 			} else if (calculerConflit(cours)) { // ensuite verifier si conflit existe
 				
-				if (nbConflits++ > maxConflits) { // si on depasse max conflits, stop! 
+				if (nbConflits+1 > maxConflits) { // si on depasse max conflits, stop! 
 					throw new ValidationException();				
 				} else {
 					System.out.println("Conflit d'horaire autorisé.");
 					listeCours.add(cours); // si nb conflits est autorise, on ajoute
 					this.nbConflits++; //incrementer compteur nb conflits
+					nbCreditsTotal += cours.getNbCredits(); //maj nb credits
 				}
  
 			} else { // sinon, (pas de conflits) ok pour ajouter
 				listeCours.add(cours);
-				nbCreditsTotal+= cours.getNbCredits();
+				nbCreditsTotal += cours.getNbCredits();
 			}
 		} 
 	}
 
 	public void supprimerCours(Cours cours) {	
+		// d'abord supprimer le cours et maj nb creditds
 		listeCours.remove(cours);
 		nbCreditsTotal -= cours.getNbCredits();
+		
+		if (this.calculerConflit(cours)) { // si c'etait un conflit (avec reste de cours existant), decrementer nb conflits 
+			this.nbConflits--;
+		}
 	}
 
 
-	/**return TRUE si conflit avec un cours (pour évaluer si on peut l'ajouter ou pas)
+	/**return TRUE si un cours represente un conflit avec un cours dans l'emploi du temps (pour évaluer si on peut l'ajouter ou pas)
 	 * @param cours
 	 * @return true si conflit existe
 	 */
@@ -144,7 +153,7 @@ public class EmploiDuTemps {
 		for (Cours coursDejaInscrit : this.listeCours) { // parcourir tous les cours deja dans emploi du temps
 			if( coursDejaInscrit.conflit(cours)) {
 				return true; // si j'amais c'est TRUE, on s'arrête là, on renvoie true. sinon, continue boucle
-			}	
+			}
 		}
 		return false;
 	}

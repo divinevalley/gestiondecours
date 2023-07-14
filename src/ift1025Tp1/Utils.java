@@ -95,8 +95,7 @@ public class Utils {
 		int numero = 1; //commencer a 1
 		StringBuilder toPrint = new StringBuilder("================================================================\nREPERTOIRE DES COURS\n");
 		if (repertoireCours.isEmpty()) {
-			toPrint.append("\n (pas de cours)");
-			
+			toPrint.append("\n(repertoire vide - pas de cours)\n");
 		}
 		
 		for (Cours cours : repertoireCours) {
@@ -206,7 +205,6 @@ public class Utils {
 				break;
 			} catch (ValidationException e) {
 				System.out.println("ne peut pas etre negatif ou 0!");
-				e.printStackTrace(); //TODO remove
 			}
 		}
 	}
@@ -470,7 +468,6 @@ public class Utils {
 
 				} catch(NumberFormatException e) {  
 					System.out.println("Invalide. Reessayer.");
-					e.printStackTrace(); // TODO remove
 				}
 			}
 		}
@@ -544,6 +541,8 @@ public class Utils {
 				continuer = false; // => c'est bon, sortir boucle
 			} catch (NumberFormatException e) {
 				System.out.println("Invalide! Reessayer. Doit etre un entier.");
+			} catch(ValidationException e) {
+				System.out.println("Peut pas etre negatif ou 0! Reessayer.");
 			}
 		}
 		
@@ -581,12 +580,11 @@ public class Utils {
 	 * @return EmploiDuTemps modifié
 	 */
 	public static EmploiDuTemps ajouterEmploiDuTemps(TreeSet<Cours> repertoireCours, Scanner scanner, EmploiDuTemps emploiDuTemps) {
-		boolean continuer = true;
 		String msgErreur = "\n";
 
 		//tout d'abord afficher repertoire pour premiere fois
 		System.out.println(coursToStringNumerote(repertoireCours));
-		while(continuer) {
+		while(true) {
 
 			// afficher emploi du temps actuel
 			System.out.println("\n=======Votre emploi du temps actuel:=======");
@@ -597,10 +595,9 @@ public class Utils {
 				System.out.println("Vous devez d'abord créer votre emploi du temps");
 				break;
 			}
-			
 
 			System.out.println(msgErreur);
-			System.out.println("\n\nVeuillez sélectionner le numéro du cours que vous souhaitez ajouter (eg. \"1\") \n"
+			System.out.println("\nVeuillez sélectionner le numéro du cours que vous souhaitez ajouter (eg. \"1\") \n"
 					+ "(Défiler vers le haut pour voir le répertoire des cours)\n"
 					+ "(ou faites le 0 pour terminer):");
 
@@ -608,7 +605,6 @@ public class Utils {
 			String inputNumeroCours = scanner.nextLine();
 
 			if (inputNumeroCours.equals("0")) {
-				continuer = false;
 				System.out.println("Merci. Voici votre emploi du temps:\n");
 				System.out.println(emploiDuTemps.toString());
 				break;
@@ -617,12 +613,12 @@ public class Utils {
 			try {
 				coursSelectionne = afficherEtSelectionnerCours(repertoireCours, inputNumeroCours); // re-afficher rep cours, retrouver l'objet Cours choisi
 				System.out.println("Vous avez choisi : " + coursSelectionne.getSigle());
+				msgErreur = "Cours ajouté.";
 			} catch (NumberFormatException e) {
 				msgErreur = "Choix de cours invalide. Reessayer:";
 				continue; // recommencer boucle
 			} catch(IndexOutOfBoundsException e) {
 				msgErreur = "Ce cours n'existe pas. Ressayer:";
-				//				e.printStackTrace();
 				continue; // recommencer boucle 
 			}
 
@@ -635,10 +631,10 @@ public class Utils {
 			} catch(CoursDejaAjouteException e) {
 				msgErreur = "Ce cours est deja dans votre emploi du temps. Le cours n'a pas été ajouté";
 			} catch (InputMismatchException e) {
-				msgErreur = "Vous ne pouvez pas dépasser le nombre de crédit maximum ou 10 cours maximum. Le cours n'a pas été ajouté.\n"
+				msgErreur = "Vous ne pouvez pas dépasser le nombre de crédits maximum ou 10 cours maximum. Le cours n'a pas été ajouté.\n"
 						+ "Vous pouvez ajuster le nombre de crédits maximum dans le menu modifier emploi du temps.";
 			} catch(Exception e) {
-				e.printStackTrace(); //TODO remove
+				msgErreur = "Autre erreur."; 	
 			}
 
 		}
@@ -653,12 +649,14 @@ public class Utils {
 	 */
 	public static EmploiDuTemps modifierEmploiDuTemps(Scanner scanner, EmploiDuTemps emploiDuTemps) {
 		try {
-
+			//afficher emploi du temps avec numerotation
+			ArrayList<Cours> listCours = afficherEmploiDuTempsNumerote(emploiDuTemps);
 
 			while(true) {
-				//afficher emploi du temps avec numerotation
-				ArrayList<Cours> listCours = afficherEmploiDuTempsNumerote(emploiDuTemps);
+				
 				String msgErreur = "";
+				
+				System.out.println(msgErreur);
 				System.out.println("\nSélectionner le numéro du cours à supprimer "
 						+ "\nFaites le \"c\" pour changer nombre de crédits ou \"h\" pour changer le max conflits d'horaire"
 						+ "\n(ou faites le 0 pour quitter/terminer) ");
@@ -670,13 +668,11 @@ public class Utils {
 
 				if (input.equalsIgnoreCase("c")) { // modifier max credits
 					modifierMaxcredits(emploiDuTemps, scanner);			
-					msgErreur="";
 					continue; // reprend depuis debut
 				}
 				
 				if (input.equalsIgnoreCase("h")) { // modifier max conflits
 					modifierMaxConflits(scanner, emploiDuTemps);
-					msgErreur="";
 					continue; // reprend depuis debut
 				}
 
@@ -706,7 +702,7 @@ public class Utils {
 	private static void modifierMaxcredits(EmploiDuTemps emploiDuTemps, Scanner scanner) {
 		while(true) {
 			try {
-				System.out.println("Nouveau max souhaité: ");
+				System.out.println("Max credits souhaité (eg. 16): ");
 				int inputCredits = Integer.parseInt(scanner.nextLine());
 				emploiDuTemps.setNbCreditMax(inputCredits);
 				System.out.println("Credits max est maintenant : " + inputCredits);
@@ -721,12 +717,12 @@ public class Utils {
 	}
 
 	/**
-	 * affiche (print) l'emploi du temps avec cours numerotés, renvoie la liste de cours 
+	 * Affiche (print) l'emploi du temps avec cours numerotés, renvoie la liste de cours 
 	 * en ArrayList (pour avoir indexation) 
 	 * 
 	 * @param emploiDuTemps
 	 * @return ArrayList<Cours> dans emploi du temps
-	 * @throws IllegalStateException
+	 * @throws IllegalStateException si aucun emploi du temps
 	 */
 	private static ArrayList<Cours> afficherEmploiDuTempsNumerote(EmploiDuTemps emploiDuTemps) throws IllegalStateException {
 		System.out.println("\n===========EMPLOI DU TEMPS============");
@@ -734,7 +730,7 @@ public class Utils {
 		if (listeCours==null) { //checker si null (pas cree)
 			System.out.println("(emploi du temps n'a pas été créé)");
 			throw new IllegalStateException();
-		} else if(listeCours.isEmpty()) {
+		} else if(listeCours.isEmpty()) { // si cree mais aucun cours ajoute
 			System.out.println("(aucun cours)");
 		} else {
 			int i = 1; //commencer numerotation a 1
@@ -744,10 +740,10 @@ public class Utils {
 				System.out.println(cours.toString());
 				i++;
 			}
-			return listeCours;
 		}
 
 		System.out.println(emploiDuTemps.afficherCredits()); // eg. 12 credits (max 18 credits)
-		return new ArrayList<Cours>();
+		System.out.println(emploiDuTemps.afficherNbConflits()); // eg. nb conflits actuel: 1 (2 max)
+		return listeCours;
 	}
 }
