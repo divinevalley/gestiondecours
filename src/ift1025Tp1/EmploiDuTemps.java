@@ -9,6 +9,8 @@ public class EmploiDuTemps {
 	private ArrayList<Cours> listeCours;
 	private int nbCreditMax;
 	private int nbCreditsTotal;
+	private int maxConflits; 
+	private int nbConflits;
 
 
 	/**
@@ -24,12 +26,15 @@ public class EmploiDuTemps {
 	public EmploiDuTemps(int nbCreditMax) {
 		this.nbCreditMax = nbCreditMax;
 		this.nbCreditsTotal=0;
+		this.maxConflits=0;
+		this.nbConflits=0;
 		listeCours = new ArrayList<>();
 	}
 
 	//constructeur pour initialiser
 	public EmploiDuTemps() {
-
+		nbConflits=0;
+		maxConflits=0;
 	}
 
 	public int getNbCreditsTotal() {
@@ -63,6 +68,31 @@ public class EmploiDuTemps {
 	public void setNbCreditsTotal(int nbCreditsTotal) {
 		this.nbCreditsTotal = nbCreditsTotal;
 	}
+	
+
+	public int getMaxConflits() {
+		return maxConflits;
+	}
+
+	/**
+	 * setter inclut une étape de validation que le nombre n'est pas négatif (0 est autorise)
+	 * @param maxConflits
+	 * @throws ValidationException
+	 */
+	public void setMaxConflits(int maxConflits) throws ValidationException {
+		if (maxConflits <0) {
+			throw new ValidationException();
+		}
+		this.maxConflits = maxConflits;
+	}
+
+	public int getNbConflits() {
+		return nbConflits;
+	}
+
+	public void setNbConflits(int nbConflits) {
+		this.nbConflits = nbConflits;
+	}
 
 	/**
 	 * ajouter un cours à l'emploi du temps personnalisé. inclut des validations si jamais le cours a déjà été ajouté, si ça dépasse
@@ -76,11 +106,19 @@ public class EmploiDuTemps {
 		if (listeCours.contains(cours)) { // si deja ajoute
 			throw new CoursDejaAjouteException();
 		} else {
-			if(depasseMax(cours)) { // si depasse max on s'arrete la 
+			if(depasseMaxCredits(cours)) { // si depasse max credits on s'arrete la 
 				throw new InputMismatchException(); 
-			} else if (calculerConflit(cours)) { // ensuite verifier si conflit existe  
-				throw new ValidationException(); 
-			} else { // sinon, ok pour ajouter
+			} else if (calculerConflit(cours)) { // ensuite verifier si conflit existe
+				
+				if (nbConflits++ > maxConflits) { // si on depasse max conflits, stop! 
+					throw new ValidationException();				
+				} else {
+					System.out.println("Conflit d'horaire autorisé.");
+					listeCours.add(cours); // si nb conflits est autorise, on ajoute
+					this.nbConflits++; //incrementer compteur nb conflits
+				}
+ 
+			} else { // sinon, (pas de conflits) ok pour ajouter
 				listeCours.add(cours);
 				nbCreditsTotal+= cours.getNbCredits();
 			}
@@ -111,13 +149,13 @@ public class EmploiDuTemps {
 		return false;
 	}
  
-	/**return TRUE si un cours si ajouté va depasser max crédits
+	/**return TRUE si un cours si ajouté va depasser max crédits OU depasse max de 10 cours
 	 * @param cours
 	 * @return TRUE si dépasse 
 	 */
-	public boolean depasseMax(Cours cours) {
+	public boolean depasseMaxCredits(Cours cours) {
 		int nbCreditsSiAjoute = nbCreditsTotal + cours.getNbCredits();
-		return (nbCreditsSiAjoute > nbCreditMax); 
+		return (nbCreditsSiAjoute > nbCreditMax || this.listeCours.size()==10); 
 	}
 
 
@@ -127,6 +165,16 @@ public class EmploiDuTemps {
 	public String afficherCredits() {
 		return "\nNombre de credits: " + nbCreditsTotal + " (max: " + nbCreditMax + " credits)";
 	}
+	
+	
+	/**
+	 * @return String pour affichage optimal de nombre de conflits en format eg. "Nombre de conflits : 1 (max: 3)" 
+	 */
+	public String afficherNbConflits() {
+		return "\nNombre de conflits actuel: " + nbConflits + " (max: " + maxConflits + ")";
+	}
+	
+	
 
 	/**
 	 *@return String pour afficher emploi du temps en format lisible 
@@ -139,7 +187,9 @@ public class EmploiDuTemps {
 		} else {
 			toString.append("EmploiDuTemps:\n" + listeCours);
 		}
-		toString.append("\nNombre de credits: " + nbCreditsTotal + " (max: " + nbCreditMax + " credits)");
+		toString.append("\nNombre de credits: " + nbCreditsTotal + " (max: " + nbCreditMax + " credits)\n" 
+		+ "Nombre de conflits actuel: " + nbConflits + " (max: " + maxConflits + ")" );
+		
 		return toString.toString();
 	}
 

@@ -91,8 +91,14 @@ public class Utils {
 	 * @return String repertoire avec numérotation
 	 */
 	private static String coursToStringNumerote(TreeSet<Cours> repertoireCours) {
+		
 		int numero = 1; //commencer a 1
 		StringBuilder toPrint = new StringBuilder("================================================================\nREPERTOIRE DES COURS\n");
+		if (repertoireCours.isEmpty()) {
+			toPrint.append("\n (pas de cours)");
+			
+		}
+		
 		for (Cours cours : repertoireCours) {
 			toPrint.append("---------------------------------------------------------------\n\n"
 					+ ">>>("+ numero + ")<<<\n\n");
@@ -532,18 +538,39 @@ public class Utils {
 		while(continuer) {
 			// demander nb de credits
 			try {
-				System.out.print("Entrez le nombre de credits MAX pour cet emploi du temps (eg. 16) : ");
+				System.out.print("Entrez le nombre de credits MAX pour cet emploi du temps (eg. 16): ");
 				int nbCredits = Integer.parseInt(scanner.nextLine());
 				emploiDuTemps = new EmploiDuTemps(nbCredits);				
 				continuer = false; // => c'est bon, sortir boucle
 			} catch (NumberFormatException e) {
-				System.out.println("Invalide! Reessayer");
+				System.out.println("Invalide! Reessayer. Doit etre un entier.");
 			}
 		}
-
+		
+		modifierMaxConflits(scanner, emploiDuTemps); //mnt menu pour max conflits
+		
 		emploiDuTemps = ajouterEmploiDuTemps(repertoireCours, scanner, emploiDuTemps);
 
 		return emploiDuTemps;
+	}
+	
+	public static void modifierMaxConflits(Scanner scanner, EmploiDuTemps emploiDuTemps) {
+		//mnt nb conflits
+				boolean continuer = true;
+				while(continuer) {
+					// demander nb de conflits
+					try {
+						System.out.print("Entrez le nombre de conflits d'horaire MAX pour cet emploi du temps (eg. 2) : ");
+						int nbConflitsInput = Integer.parseInt(scanner.nextLine());
+						emploiDuTemps.setMaxConflits(nbConflitsInput);
+						continuer = false; // => c'est bon, sortir boucle
+					} catch (NumberFormatException e) {
+						System.out.println("Invalide! Doit etre un chiffre entier. Reessayer");
+					} catch (ValidationException e) {
+						System.out.println("Doit etre 0 ou positif. Reessayer.");
+					}
+				}
+
 	}
 
 
@@ -604,11 +631,11 @@ public class Utils {
 				emploiDuTemps.ajouterCours(coursSelectionne);
 				msgErreur = ""; // vider msg erreur pour ne rien afficher la prochaine boucle 
 			} catch (ValidationException e) {
-				msgErreur =  "Conflit horaire! Le cours n'a pas été ajouté.";
+				msgErreur =  "Conflit horaire! Le cours n'a pas été ajouté." + emploiDuTemps.afficherNbConflits();
 			} catch(CoursDejaAjouteException e) {
 				msgErreur = "Ce cours est deja dans votre emploi du temps. Le cours n'a pas été ajouté";
 			} catch (InputMismatchException e) {
-				msgErreur = "Vous ne pouvez pas dépasser le nombre de crédit maximum. Le cours n'a pas été ajouté.\n"
+				msgErreur = "Vous ne pouvez pas dépasser le nombre de crédit maximum ou 10 cours maximum. Le cours n'a pas été ajouté.\n"
 						+ "Vous pouvez ajuster le nombre de crédits maximum dans le menu modifier emploi du temps.";
 			} catch(Exception e) {
 				e.printStackTrace(); //TODO remove
@@ -633,7 +660,7 @@ public class Utils {
 				ArrayList<Cours> listCours = afficherEmploiDuTempsNumerote(emploiDuTemps);
 				String msgErreur = "";
 				System.out.println("\nSélectionner le numéro du cours à supprimer "
-						+ "\nFaites le \"c\" pour changer nombre de crédits"
+						+ "\nFaites le \"c\" pour changer nombre de crédits ou \"h\" pour changer le max conflits d'horaire"
 						+ "\n(ou faites le 0 pour quitter/terminer) ");
 				String input = scanner.nextLine();
 
@@ -643,6 +670,13 @@ public class Utils {
 
 				if (input.equalsIgnoreCase("c")) { // modifier max credits
 					modifierMaxcredits(emploiDuTemps, scanner);			
+					msgErreur="";
+					continue; // reprend depuis debut
+				}
+				
+				if (input.equalsIgnoreCase("h")) { // modifier max conflits
+					modifierMaxConflits(scanner, emploiDuTemps);
+					msgErreur="";
 					continue; // reprend depuis debut
 				}
 
